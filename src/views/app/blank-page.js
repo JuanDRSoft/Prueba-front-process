@@ -31,6 +31,21 @@ const BlankPage = ({ match, authUser }) => {
       setLawyer(lawyerData.data);
     };
 
+    const getPayment = async () => {
+      try {
+        const paymentData = await clienteAxios.get(
+          `/payments/lawyer/${currentUser.id}`
+        );
+        if (paymentData.data[0].status.includes('approved')) {
+          console.log('activo');
+          setApproved(true);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getPayment();
     getLawyer();
     getCount();
   }, []);
@@ -58,7 +73,7 @@ const BlankPage = ({ match, authUser }) => {
         }
       ],
       back_urls: {
-        success: 'https://process-query.netlify.app/app/blank-page/',
+        success: 'localhost:3000/app/blank-page/',
         failure: '/failure',
         pending: '/pending'
       },
