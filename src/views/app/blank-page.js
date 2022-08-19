@@ -7,6 +7,7 @@ import IconCardsCarousel from 'containers/dashboards/IconCardsCarousel';
 import data from 'data/iconCards';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import { getDateWithFormat } from 'helpers/Utils';
 import clienteAxios from '../../config/axios';
 import FormAuth from './detail/components/Proceso/FormAuth';
 
@@ -19,6 +20,8 @@ const BlankPage = ({ match, authUser }) => {
 
   const { currentUser } = authUser;
   const { _id } = lawyer;
+  const { endDate } = payment;
+
 
   useEffect(() => {
     const getCount = async () => {
@@ -37,8 +40,9 @@ const BlankPage = ({ match, authUser }) => {
           `/payments/lawyer/${currentUser.id}`
         );
         if (paymentData.data[0].status.includes('approved')) {
-          console.log('activo');
           setApproved(true);
+          setPayment(paymentData.data);
+
         }
       } catch (error) {
         console.log(error);
@@ -176,9 +180,7 @@ const BlankPage = ({ match, authUser }) => {
 
               <div style={{ display: 'flex', gap: 10 }}>
                 <p style={{ fontSize: 18 }}>Fecha de vencimiento:</p>
-                <p style={{ fontSize: 30 }}>
-                  {approved ? '30/08/2022' : '30/07/2022'}
-                </p>
+                <p style={{ fontSize: 30 }}>{getDateWithFormat(endDate)}</p>
               </div>
             </div>
           </Card>
