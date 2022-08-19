@@ -22,7 +22,6 @@ const BlankPage = ({ match, authUser }) => {
   const { _id } = lawyer;
   const { endDate } = payment;
 
-
   useEffect(() => {
     const getCount = async () => {
       const countData = await clienteAxios.get('/process/count/bylawyer');
@@ -39,10 +38,13 @@ const BlankPage = ({ match, authUser }) => {
         const paymentData = await clienteAxios.get(
           `/payments/lawyer/${currentUser.id}`
         );
-        if (paymentData.data[0].status.includes('approved')) {
+
+        const countPayment = paymentData.data.length - 1;
+        console.log(paymentData.data[countPayment]);
+
+        if (paymentData.data[countPayment].status.includes('approved')) {
           setApproved(true);
           setPayment(paymentData.data);
-
         }
       } catch (error) {
         console.log(error);
@@ -77,7 +79,7 @@ const BlankPage = ({ match, authUser }) => {
         }
       ],
       back_urls: {
-        success: 'https://process-query.netlify.app/app/blank-page/',
+        success: 'localhost:3000/app/blank-page/',
         failure: '/failure',
         pending: '/pending'
       },
@@ -90,9 +92,6 @@ const BlankPage = ({ match, authUser }) => {
         Authorization: `Bearer APP_USR-3358235138150118-080815-8185f95057c925ac403db991da834eb0-1175458796`
       }
     });
-
-    setPayment(paymentData.data);
-    console.log(paymentData.data, payment);
 
     setUrlPago(paymentData.data.init_point);
   };
