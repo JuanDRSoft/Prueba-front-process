@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Badge, Card } from 'reactstrap';
+import { Row, Badge } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navs/Breadcrumb';
-import IconCardsCarousel from 'containers/dashboards/IconCardsCarousel';
+import IconCardsCarousel, {
+  IconCards
+} from 'containers/dashboards/IconCardsCarousel';
 import { getDate, getMonth, getYear } from 'date-fns';
-import data from 'data/iconCards';
+import data, { membership } from 'data/iconCards';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import clienteAxios from '../../config/axios';
@@ -123,6 +125,35 @@ const BlankPage = ({ match, authUser }) => {
     return <IconCardsCarousel data={data} />;
   };
 
+  const membershipData = () => {
+    membership.forEach((element, i) => {
+      membership[i].value = approved ? (
+        <p style={{ fontSize: 18 }}>
+          <Badge color='success' pill>
+            ACTIVA
+          </Badge>
+        </p>
+      ) : (
+        <p style={{ fontSize: 18 }}>
+          <Badge color='danger' pill>
+            VENCIDA
+          </Badge>
+        </p>
+      );
+      membership[1].value = (
+        <p style={{ fontSize: 30, marginTop: 8 }}>
+          {invoice()} <IntlMessages id='COP' />
+        </p>
+      );
+
+      membership[2].value = (
+        <p style={{ fontSize: 30, marginTop: 8 }}>{formatDate()}</p>
+      );
+    });
+
+    return <IconCards data={membership} />;
+  };
+
   return (
     <>
       <Row>
@@ -141,57 +172,10 @@ const BlankPage = ({ match, authUser }) => {
       </Row>
       <Row>
         <Colxx xxs='12' className='mb-1'>
-          <h1>Membresia Y Facturación</h1>
+          <h1>Membresía Y Facturación</h1>
 
-          <Card>
-            <div
-              style={{
-                alignItems: 'center',
-                display: 'flex',
-                gap: 40,
-                justifyContent: 'center',
-                paddingTop: 20
-              }}
-            >
-              <p
-                style={{
-                  // margin: '0 0.7em 0 0',
-                  fontSize: 18,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  display: 'flex',
-                  textAlign: 'center',
-                  gap: 10
-                }}
-              >
-                <IntlMessages id='Estado de su membresia:' />
+          <div style={{ marginTop: 20 }}>{membershipData()}</div>
 
-                {approved ? (
-                  <Badge color='success' pill className='mb-1'>
-                    ACTIVA
-                  </Badge>
-                ) : (
-                  <Badge color='danger' pill className='mb-1'>
-                    VENCIDA
-                  </Badge>
-                )}
-              </p>
-
-              <div style={{ display: 'flex', gap: 10 }}>
-                <p style={{ fontSize: 18 }}>
-                  <IntlMessages id='Estado de tu proxima factura:' />
-                </p>
-                <p style={{ fontSize: 30 }}>
-                  {invoice()} <IntlMessages id='COP' />
-                </p>
-              </div>
-
-              <div style={{ display: 'flex', gap: 10 }}>
-                <p style={{ fontSize: 18 }}>Fecha de vencimiento:</p>
-                <p style={{ fontSize: 30 }}>{formatDate()}</p>
-              </div>
-            </div>
-          </Card>
           {approved ? null : (
             <div
               style={{
@@ -214,6 +198,7 @@ const BlankPage = ({ match, authUser }) => {
           )}
         </Colxx>
       </Row>
+
       <Row className='mt-4'>
         <h1 style={{ paddingLeft: '15px' }}>Colaboradores</h1>
       </Row>
