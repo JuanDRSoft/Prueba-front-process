@@ -4,10 +4,10 @@ import IntlMessages from 'helpers/IntlMessages';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navs/Breadcrumb';
 import IconCardsCarousel from 'containers/dashboards/IconCardsCarousel';
+import { getDate, getMonth, getYear } from 'date-fns';
 import data from 'data/iconCards';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { getDateWithFormat } from 'helpers/Utils';
 import clienteAxios from '../../config/axios';
 import FormAuth from './detail/components/Proceso/FormAuth';
 
@@ -44,7 +44,7 @@ const BlankPage = ({ match, authUser }) => {
 
         if (paymentData.data[countPayment].status.includes('approved')) {
           setApproved(true);
-          setPayment(paymentData.data);
+          setPayment(paymentData.data[countPayment]);
         }
       } catch (error) {
         console.log(error);
@@ -59,6 +59,15 @@ const BlankPage = ({ match, authUser }) => {
   const invoice = () => {
     const price = count[1] * 500;
     return price;
+  };
+
+  const formatDate = () => {
+    const fecha = Date.parse(endDate);
+
+    return `${Number(getDate(fecha)) > 9 ? '' : '0'}
+      ${getDate(fecha)}-${Number(getMonth(fecha)) + 1 > 9 ? '' : '0'}${
+      Number(getMonth(fecha)) + 1
+    }-${getYear(fecha)}`;
   };
 
   const paymentMethod = async () => {
@@ -113,6 +122,8 @@ const BlankPage = ({ match, authUser }) => {
 
     return <IconCardsCarousel data={data} />;
   };
+
+  console.log(Date.parse(endDate));
 
   return (
     <>
@@ -179,7 +190,7 @@ const BlankPage = ({ match, authUser }) => {
 
               <div style={{ display: 'flex', gap: 10 }}>
                 <p style={{ fontSize: 18 }}>Fecha de vencimiento:</p>
-                <p style={{ fontSize: 30 }}>{getDateWithFormat(endDate)}</p>
+                <p style={{ fontSize: 30 }}>{formatDate()}</p>
               </div>
             </div>
           </Card>
