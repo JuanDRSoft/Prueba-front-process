@@ -21,3 +21,21 @@ const IconCardsCarousel = ({ className = 'icon-cards-row', data }) => {
   );
 };
 export default IconCardsCarousel;
+
+export const IconCards = ({ className = 'icon-cards-row', data }) => {
+  return (
+    <div className={className}>
+      <Row>
+        {data.map((item, index) => {
+          return (
+            <Col xxs='3' key={`icon_card_${index}`}>
+              <div>
+                <IconCard {...item} count={1} />
+              </div>
+            </Col>
+          );
+        })}
+      </Row>
+    </div>
+  );
+};
