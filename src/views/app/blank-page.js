@@ -123,8 +123,6 @@ const BlankPage = ({ match, authUser }) => {
     return <IconCardsCarousel data={data} />;
   };
 
-  console.log(Date.parse(endDate));
-
   return (
     <>
       <Row>
