@@ -215,6 +215,8 @@ const DataListPages = ({ match, authUser }) => {
             onContextMenuClick={onContextMenuClick}
             onContextMenu={onContextMenu}
             onChangePage={setCurrentPage}
+            authUser={authUser}
+            match={match}
           />
         )}
       </div>
