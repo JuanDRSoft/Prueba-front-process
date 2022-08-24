@@ -2,49 +2,81 @@
 import React, { useEffect, useState } from 'react';
 import {
   UncontrolledDropdown,
-  DropdownToggle
-  /* DropdownMenu, */
-  /* NavLink */
+  DropdownToggle,
+  DropdownMenu,
+  NavLink,
+  Badge
 } from 'reactstrap';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import clienteAxios from '../../config/axios';
-/* import PerfectScrollbar from 'react-perfect-scrollbar';
-import notifications from 'data/notifications'; 
-import { adminRoot } from 'constants/defaultValues'; */
 
-/* const NotificationItem = ({ img, title, date }) => {
+const NotificationItem = ({ lastUpdateDate, filingNumber, despacho }) => {
   return (
-    <div className='d-flex flex-row mb-3 pb-3 border-bottom'>
-      <NavLink to={`${adminRoot}/pages/product/details`}>
-        <img
-          src={img}
-          alt={title}
-          className='img-thumbnail list-thumbnail xsmall border-0 rounded-circle'
-        />
-      </NavLink>
-      <div className='pl-3 pr-2'>
-        <NavLink to={`${adminRoot}/pages/product/details`}>
-          <p className='font-weight-medium mb-1'>{title}</p>
-          <p className='text-muted mb-0 text-small'>{date}</p>
+    <div
+      className='d-flex flex-row mb-3 pb-3 border-bottom'
+      style={{ alignItems: 'center' }}
+    >
+      <div className=''>
+        <NavLink href={`/app/detail/${filingNumber}`}>
+          <p
+            style={{
+              display: 'flex',
+              fontSize: 10,
+              marginBottom: 0,
+              color: 'gray'
+            }}
+          >
+            Radicado: {filingNumber}
+          </p>
+
+          {/* <p
+            className='mb-1'
+            style={{ display: 'flex', fontSize: 12, marginBottom: -5 }}
+          >
+            {sujetosProcesales}
+          </p> */}
+
+          <p
+            style={{
+              display: 'flex',
+              fontSize: 12,
+              marginBottom: 5,
+              // color: 'gray',
+              lineHeight: 1.5
+            }}
+          >
+            {despacho}
+          </p>
+
+          <Badge
+            color='primary'
+            pill
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            {lastUpdateDate.split('T')[0]}
+          </Badge>
         </NavLink>
       </div>
     </div>
   );
-}; */
+};
 
 const TopnavNotifications = () => {
-  const [Count, setCount] = useState(0);
+  const [process, setProcess] = useState([]);
 
   useEffect(() => {
-    const getAllData = async () => {
-      const countDataAll = await clienteAxios.get(
-        '/process/processActive/bylawyer'
-      );
-      console.log('@Data', countDataAll);
-      setCount(countDataAll.data);
+    const getProcess = async () => {
+      const processData = await clienteAxios.get('/process/all/bylawyer');
+      console.log('Data', processData);
+      setProcess(processData.data);
     };
 
-    getAllData();
+    getProcess();
   }, []);
+
+  const notifications = process
+    ? process.filter((e) => e.notificationWeb === true)
+    : [];
 
   return (
     <div className='position-relative d-inline-block'>
@@ -54,9 +86,9 @@ const TopnavNotifications = () => {
           color='empty'
         >
           <i className='simple-icon-bell' />
-          <span className='count'>{Count}</span>
+          <span className='count'>{notifications.length}</span>
         </DropdownToggle>
-        {/*  <DropdownMenu
+        <DropdownMenu
           className='position-absolute mt-3 scroll'
           right
           id='notificationDropdown'
@@ -68,7 +100,7 @@ const TopnavNotifications = () => {
               return <NotificationItem key={index} {...notification} />;
             })}
           </PerfectScrollbar>
-        </DropdownMenu> */}
+        </DropdownMenu>
       </UncontrolledDropdown>
     </div>
   );
