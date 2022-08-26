@@ -86,19 +86,25 @@ function* registerWithEmailPassword({ payload }) {
       email,
       password
     );
-    if (!registerUser.message) {
-      const item = { uid: registerUser.user.uid, ...currentUser };
-      setCurrentUser(item);
 
-      yield axios.post(`${api}/lawyer`, {
+    if (!registerUser.message) {
+      const dataRegister = yield axios.post(`${api}/lawyer`, {
         name,
         email,
         phone,
         uid: registerUser.user.uid
       });
+      const { _id } = dataRegister.data;
+      const item = {
+        title: name,
+        id: _id,
+        uid: registerUser.user.uid,
+        ...currentUser
+      };
+      setCurrentUser(item);
 
       yield put(registerUserSuccess(item));
-      history.push(adminRoot);
+      history.push('/user/login');
     } else {
       yield put(registerUserError(registerUser.message));
     }
