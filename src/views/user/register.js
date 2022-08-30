@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Row,
   Card,
@@ -23,6 +23,11 @@ const Register = ({ loading, error, history, registerUserAction }) => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+
+  useEffect(() => {
+    const correo = email.toLowerCase();
+    setEmail(correo);
+  }, [email]);
 
   const onUserRegister = () => {
     if (email !== '' && password !== '') {

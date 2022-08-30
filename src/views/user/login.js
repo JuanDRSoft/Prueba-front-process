@@ -31,8 +31,8 @@ const validateEmail = (value) => {
 };
 
 const Login = ({ history, loading, error, loginUserAction }) => {
-  const [email] = useState('');
-  const [password] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     if (error) {
@@ -40,10 +40,18 @@ const Login = ({ history, loading, error, loginUserAction }) => {
     }
   }, [error]);
 
-  const onUserLogin = (values) => {
+  useEffect(() => {
+    const correo = email.toLowerCase();
+    setEmail(correo);
+  }, [email]);
+
+  const onUserLogin = () => {
+    validateEmail(email);
+    validatePassword(password);
+
     if (!loading) {
-      if (values.email !== '' && values.password !== '') {
-        loginUserAction(values, history);
+      if (email !== '' && password !== '') {
+        loginUserAction({ email, password }, history);
       }
     }
   };
@@ -84,7 +92,8 @@ const Login = ({ history, loading, error, loginUserAction }) => {
                     <Field
                       className='form-control'
                       name='email'
-                      validate={validateEmail}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                     {errors.email && touched.email && (
                       <div className='invalid-feedback d-block'>
@@ -100,7 +109,8 @@ const Login = ({ history, loading, error, loginUserAction }) => {
                       className='form-control'
                       type='password'
                       name='password'
-                      validate={validatePassword}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                     {errors.password && touched.password && (
                       <div className='invalid-feedback d-block'>
