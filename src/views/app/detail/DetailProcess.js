@@ -71,52 +71,54 @@ const DetailProcess = ({ match }) => {
         </Colxx>
       </Row>
 
-      <Row className='mb-5'>
-        <Colxx xxs='6'>
-          <Card style={{ position: 'sticky', top: '128px' }}>
-            <CardBody>
-              <CardTitle style={{ fontWeight: 'bold' }}>
-                DETALLES DEL PROCESO
-              </CardTitle>
-              <div className={style.detailData}>
-                <h4 className={style.textMargin}>Numero de Radicado:</h4>
-                <div className={style.textMargin}>{filingNumber}</div>
-              </div>
-              <div className={style.detailData}>
-                <h4 className={style.textMargin}>Ultima Actualizacion:</h4>
-                <div className={style.textMargin}>{lastUpdateDate}</div>
-              </div>
-              <div className={style.detailData}>
-                <h4 className={style.textMargin}>Despacho:</h4>
-                <div className={style.textMargin}>{despacho}</div>
-              </div>
-              <div className={style.detailData}>
-                <h4 className={style.textMargin}>Departamento: </h4>
-                <div className={style.textMargin}>{departamento}</div>
-              </div>
-              <h4>Sujetos Procesales: </h4>
-              <div>{sujetosProcesales}</div>
-            </CardBody>
-          </Card>
-        </Colxx>
-
-        <Colxx xxs='6'>
-          <Card>
-            <CardBody>
-              <CardTitle style={{ fontWeight: 'bold' }}>
-                ACTUACIONES DEL PROCESO - Cantidad {cantidad}
-              </CardTitle>
-              {loading ? (
-                <div style={{ textAlign: 'center' }}>
-                  <Spinner color='primary' className='mb-1' size='lg' />
+      <div className={style.body}>
+        <Row className='mb-5'>
+          <Colxx>
+            <Card style={{ position: 'sticky', top: '128px' }}>
+              <CardBody>
+                <CardTitle style={{ fontWeight: 'bold' }}>
+                  DETALLES DEL PROCESO
+                </CardTitle>
+                <div className={style.detailData}>
+                  <h4 className={style.textMargin}>Numero de Radicado:</h4>
+                  <div className={style.textMargin}>{filingNumber}</div>
                 </div>
-              ) : (
-                <div style={{ marginTop: '3em' }}>{renderProcesos()}</div>
-              )}
-            </CardBody>
-          </Card>
-        </Colxx>
-      </Row>
+                <div className={style.detailData}>
+                  <h4 className={style.textMargin}>Ultima Actualizacion:</h4>
+                  <div className={style.textMargin}>{lastUpdateDate}</div>
+                </div>
+                <div className={style.detailData}>
+                  <h4 className={style.textMargin}>Despacho:</h4>
+                  <div className={style.textMargin}>{despacho}</div>
+                </div>
+                <div className={style.detailData}>
+                  <h4 className={style.textMargin}>Departamento: </h4>
+                  <div className={style.textMargin}>{departamento}</div>
+                </div>
+                <h4>Sujetos Procesales: </h4>
+                <div>{sujetosProcesales}</div>
+              </CardBody>
+            </Card>
+          </Colxx>
+
+          <Colxx>
+            <Card style={{ marginTop: 10 }}>
+              <CardBody>
+                <CardTitle style={{ fontWeight: 'bold' }}>
+                  ACTUACIONES DEL PROCESO - Cantidad {cantidad}
+                </CardTitle>
+                {loading ? (
+                  <div style={{ textAlign: 'center' }}>
+                    <Spinner color='primary' className='mb-1' size='lg' />
+                  </div>
+                ) : (
+                  <div style={{ marginTop: '3em' }}>{renderProcesos()}</div>
+                )}
+              </CardBody>
+            </Card>
+          </Colxx>
+        </Row>
+      </div>
     </>
   );
 };
