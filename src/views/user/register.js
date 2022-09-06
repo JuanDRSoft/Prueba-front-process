@@ -17,10 +17,12 @@ import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
 import { adminRoot } from 'constants/defaultValues';
 import { NotificationManager } from 'components/common/react-notifications';
+import axios from 'axios';
+import uri from 'constants/api';
 
 const Register = ({ loading, error, history, registerUserAction }) => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [uid, setUid] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
 
@@ -29,9 +31,17 @@ const Register = ({ loading, error, history, registerUserAction }) => {
     setEmail(correo);
   }, [email]);
 
-  const onUserRegister = () => {
-    if (email !== '' && password !== '') {
-      registerUserAction({ email, password, name, phone }, history);
+  const onUserRegister = async () => {
+    if (email !== '' && uid !== '') {
+      // registerUserAction({ email, password, name, phone }, history);
+      const data = await axios.post(`${uri}/lawyer`, {
+        email,
+        uid,
+        name,
+        phone
+      });
+
+      console.log(data);
     }
     if (email === 'j') {
       history.push(adminRoot);
@@ -129,8 +139,8 @@ const Register = ({ loading, error, history, registerUserAction }) => {
                 </Label>
                 <Input
                   type='password'
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={uid}
+                  onChange={(e) => setUid(e.target.value)}
                 />
               </FormGroup>
 
