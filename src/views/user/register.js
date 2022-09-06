@@ -55,6 +55,10 @@ const Register = ({ loading, error, history, registerUserAction }) => {
         null,
         ''
       );
+
+      setTimeout(() => {
+        window.location.href = '/user/login';
+      }, 500);
     }
 
     // call registerUserAction()
