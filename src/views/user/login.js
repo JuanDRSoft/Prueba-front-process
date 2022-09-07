@@ -9,6 +9,10 @@ import { NotificationManager } from 'components/common/react-notifications';
 import { loginUser } from 'redux/actions';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
+import axios from 'axios';
+import uri from 'constants/api';
+import { currentUser } from 'constants/defaultValues';
+import { setCurrentUser } from 'helpers/Utils';
 
 const validatePassword = (value) => {
   let error;
@@ -30,33 +34,55 @@ const validateEmail = (value) => {
   return error;
 };
 
-const Login = ({ history, loading, error, loginUserAction }) => {
+const Login = ({ loading }) => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  useEffect(() => {
-    if (error) {
-      NotificationManager.warning(error, 'Login Error', 3000, null, null, '');
-    }
-  }, [error]);
+  const [uid, setUid] = useState('');
 
   useEffect(() => {
     const correo = email.toLowerCase();
     setEmail(correo);
   }, [email]);
 
-  const onUserLogin = () => {
+  const onUserLogin = async () => {
     validateEmail(email);
-    validatePassword(password);
+    validatePassword(uid);
 
-    if (!loading) {
-      if (email !== '' && password !== '') {
-        loginUserAction({ email, password }, history);
+    if (email !== '' && uid !== '') {
+      // loginUserAction({ email, password }, history);
+
+      try {
+        const data = await axios.post(`${uri}/lawyer/find/email`, {
+          email,
+          uid
+        });
+
+        const { name, _id } = data.data;
+
+        localStorage.setItem('token', _id);
+
+        const item = {
+          title: name,
+          id: _id,
+          uid: data.data.uid,
+          ...currentUser
+        };
+        setCurrentUser(item);
+        console.log(data);
+
+        window.location.href = '/app';
+      } catch (error) {
+        NotificationManager.warning(
+          'el usuario no existe o sus credenciales son incorrectas',
+          'Login Error',
+          3000,
+          null,
+          null,
+          ''
+        );
       }
     }
   };
-
-  const initialValues = { email, password };
+  const initialValues = { email, uid };
 
   return (
     <Row className='h-100'>
@@ -109,12 +135,12 @@ const Login = ({ history, loading, error, loginUserAction }) => {
                       className='form-control'
                       type='password'
                       name='password'
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      value={uid}
+                      onChange={(e) => setUid(e.target.value)}
                     />
-                    {errors.password && touched.password && (
+                    {errors.uid && touched.uid && (
                       <div className='invalid-feedback d-block'>
-                        {errors.password}
+                        {errors.uid}
                       </div>
                     )}
                   </FormGroup>

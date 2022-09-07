@@ -15,17 +15,18 @@ import { registerUser } from 'redux/actions';
 
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { adminRoot, currentUser } from 'constants/defaultValues';
+import { currentUser } from 'constants/defaultValues';
 import { NotificationManager } from 'components/common/react-notifications';
 import axios from 'axios';
 import uri from 'constants/api';
 import { setCurrentUser } from 'helpers/Utils';
 
-const Register = ({ loading, error, history }) => {
+const Register = () => {
   const [email, setEmail] = useState('');
   const [uid, setUid] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const correo = email.toLowerCase();
@@ -33,8 +34,20 @@ const Register = ({ loading, error, history }) => {
   }, [email]);
 
   const onUserRegister = async () => {
-    if (email !== '' && uid !== '') {
-      // registerUserAction({ email, password, name, phone }, history);
+    if ([email, uid, name].includes('')) {
+      NotificationManager.warning(
+        'Todos los campos son obligatorios',
+        'Register Failed',
+        3000,
+        null,
+        null,
+        ''
+      );
+      return;
+    }
+
+    try {
+      setLoading(true);
       const data = await axios.post(`${uri}/lawyer`, {
         email,
         uid,
@@ -50,21 +63,24 @@ const Register = ({ loading, error, history }) => {
       };
       setCurrentUser(item);
       console.log(data);
-    }
-    if (email === 'j') {
-      history.push(adminRoot);
-    }
 
-    if (error) {
-      NotificationManager.warning(
-        error,
-        'Register Failed',
-        3000,
-        null,
-        null,
-        ''
-      );
-    } else {
+      const now = new Date();
+      const vigente = 1000 * 60 * 60 * 24 * 30;
+      const fecha = now.getTime() + vigente;
+      const endDate1 = new Date(fecha);
+
+      const bodyData = {
+        paymentDate: now,
+        status: 'approved',
+        lawyer: _id,
+        amount: 0,
+        voucher: 1,
+        endDate: endDate1
+      };
+
+      const payment = await axios.post(`${uri}/payments`, bodyData);
+      console.log(payment.data);
+
       NotificationManager.success(
         'Ya puedes iniciar sesión',
         'Register Success',
@@ -76,10 +92,11 @@ const Register = ({ loading, error, history }) => {
 
       setTimeout(() => {
         window.location.href = '/user/login';
+        setLoading(false);
       }, 2500);
+    } catch (error) {
+      NotificationManager.error(error, 'Register Failed', 3000, null, null, '');
     }
-
-    // call registerUserAction()
   };
 
   return (
