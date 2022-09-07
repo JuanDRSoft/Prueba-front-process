@@ -15,12 +15,13 @@ import { registerUser } from 'redux/actions';
 
 import IntlMessages from 'helpers/IntlMessages';
 import { Colxx } from 'components/common/CustomBootstrap';
-import { adminRoot } from 'constants/defaultValues';
+import { adminRoot, currentUser } from 'constants/defaultValues';
 import { NotificationManager } from 'components/common/react-notifications';
 import axios from 'axios';
 import uri from 'constants/api';
+import { setCurrentUser } from 'helpers/Utils';
 
-const Register = ({ loading, error, history, registerUserAction }) => {
+const Register = ({ loading, error, history }) => {
   const [email, setEmail] = useState('');
   const [uid, setUid] = useState('');
   const [name, setName] = useState('');
@@ -40,7 +41,14 @@ const Register = ({ loading, error, history, registerUserAction }) => {
         name,
         phone
       });
-
+      const { _id } = data.data;
+      const item = {
+        title: name,
+        id: _id,
+        uid: data.data.uid,
+        ...currentUser
+      };
+      setCurrentUser(item);
       console.log(data);
     }
     if (email === 'j') {
@@ -135,7 +143,7 @@ const Register = ({ loading, error, history, registerUserAction }) => {
 
               <FormGroup className='form-group has-float-label  mb-4'>
                 <Label>
-                  <IntlMessages id='user.password' defaultValue={password} />
+                  <IntlMessages id='user.password' defaultValue={uid} />
                 </Label>
                 <Input
                   type='password'
