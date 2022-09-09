@@ -51,6 +51,7 @@ const AddNewModal = ({ modalOpen, toggleModal, idLawyer, reloadFnData }) => {
         break;
     }
   };
+
   const processQuery = async () => {
     if (!fillingN) {
       createNotification('error', 'filled', 'Campos obligatorios');
@@ -72,7 +73,10 @@ const AddNewModal = ({ modalOpen, toggleModal, idLawyer, reloadFnData }) => {
             despacho,
             departamento,
             sujetosProcesales
-          } = requestProceso.data.procesos[0];
+          } =
+            requestProceso.data.procesos[
+              requestProceso.data.procesos.length - 1
+            ];
 
           await axios
             .post(`${api}/process`, {
