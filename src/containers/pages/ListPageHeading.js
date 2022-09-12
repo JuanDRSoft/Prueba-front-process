@@ -23,6 +23,7 @@ const ListPageHeading = ({
   changeDisplayMode, */
   handleChangeSelectAll,
   changeOrderBy,
+  changeFilterBy,
   changePageSize,
   selectedPageSize,
   totalItemCount,
@@ -34,9 +35,11 @@ const ListPageHeading = ({
   itemsLength,
   onSearchKey,
   orderOptions,
+  filterOptions,
   pageSizes,
   toggleModal,
-  heading
+  heading,
+  selectedFilterOption
 }) => {
   const [dropdownSplitOpen, setDropdownSplitOpen] = useState(false);
   const [displayOptionsIsOpen, setDisplayOptionsIsOpen] = useState(false);
@@ -127,6 +130,25 @@ const ListPageHeading = ({
                       <DropdownItem
                         key={index}
                         onClick={() => changeOrderBy(order.column)}
+                      >
+                        {order.label}
+                      </DropdownItem>
+                    );
+                  })}
+                </DropdownMenu>
+              </UncontrolledDropdown>
+
+              <UncontrolledDropdown className='mr-1 float-md-left btn-group mb-1'>
+                <DropdownToggle caret color='outline-dark' size='xs'>
+                  <IntlMessages id='Buscar por: ' />
+                  {selectedFilterOption.label}
+                </DropdownToggle>
+                <DropdownMenu>
+                  {filterOptions.map((order, index) => {
+                    return (
+                      <DropdownItem
+                        key={index}
+                        onClick={() => changeFilterBy(order.column)}
                       >
                         {order.label}
                       </DropdownItem>
