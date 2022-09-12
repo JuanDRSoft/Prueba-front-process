@@ -23,6 +23,13 @@ const orderOptions = [
   { column: 'activos', label: 'Activos' },
   { column: 'inactivos', label: 'Inactivos' }
 ];
+
+const filterOptions = [
+  { column: '', label: 'Despacho' },
+  { column: 'sujetoProcesal', label: 'Sujetos Procesales' },
+  { column: 'filingNumber', label: 'Radicado' }
+];
+
 const pageSizes = [4, 8, 12, 20];
 
 const categories = [
@@ -39,6 +46,10 @@ const DataListPages = ({ match, authUser }) => {
   const [selectedOrderOption, setSelectedOrderOption] = useState({
     column: '',
     label: 'Fecha Actualización'
+  });
+  const [selectedFilterOption, setSelectedFilterOption] = useState({
+    column: '',
+    label: 'Despacho'
   });
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -62,7 +73,7 @@ const DataListPages = ({ match, authUser }) => {
     async function fetchData() {
       clienteAxios
         .get(
-          `/process?page=${currentPage}&selectedOrderOption=${selectedOrderOption.column}&search=${search}`
+          `/process?page=${currentPage}&selectedOrderOption=${selectedOrderOption.column}&filter=${selectedFilterOption.column}&search=${search}`
         )
         .then((res) => {
           return res.data;
@@ -174,6 +185,11 @@ const DataListPages = ({ match, authUser }) => {
           displayMode={displayMode}
           changeDisplayMode={setDisplayMode}
           handleChangeSelectAll={handleChangeSelectAll}
+          changeFilterBy={(column) => {
+            setSelectedFilterOption(
+              filterOptions.find((x) => x.column === column)
+            );
+          }}
           changeOrderBy={(column) => {
             setSelectedOrderOption(
               orderOptions.find((x) => x.column === column)
@@ -183,6 +199,7 @@ const DataListPages = ({ match, authUser }) => {
           selectedPageSize={selectedPageSize}
           totalItemCount={totalItemCount}
           selectedOrderOption={selectedOrderOption}
+          selectedFilterOption={selectedFilterOption}
           match={match}
           startIndex={startIndex}
           endIndex={endIndex}
@@ -194,6 +211,7 @@ const DataListPages = ({ match, authUser }) => {
             }
           }}
           orderOptions={orderOptions}
+          filterOptions={filterOptions}
           pageSizes={pageSizes}
           toggleModal={() => setModalOpen(!modalOpen)}
         />
