@@ -90,7 +90,7 @@ const BlankPage = ({ match, authUser }) => {
         }
       ],
       back_urls: {
-        success: 'localhost:3000/app/blank-page/',
+        success: 'https://solutioprocess.netlify.app/app/blank-page/',
         failure: '/failure',
         pending: '/pending'
       },
