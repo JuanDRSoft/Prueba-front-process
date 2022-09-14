@@ -63,8 +63,16 @@ const AddNewModal = ({ modalOpen, toggleModal, idLawyer, reloadFnData }) => {
           `https://consultaprocesos.ramajudicial.gov.co:448/api/v2/Procesos/Consulta/NumeroRadicacion?numero=${fillingN.trim()}&SoloActivos=false&pagina=1`
         );
 
-        if (requestProceso.data.procesos.length === 0) {
-          createNotification('error', 'filled', 'Radicado no existe!');
+        if (
+          requestProceso.data.procesos.length === 0 ||
+          requestProceso.data.procesos[requestProceso.data.procesos.length - 1]
+            .esPrivado === true
+        ) {
+          createNotification(
+            'error',
+            'filled',
+            'Radicado no existe o es privado!'
+          );
           setLoading(false);
         } else {
           const {
