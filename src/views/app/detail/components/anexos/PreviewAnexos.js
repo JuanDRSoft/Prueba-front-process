@@ -22,7 +22,7 @@ const PreviewAnexos = ({ anexo, loading }) => {
               <Spinner color='primary' className='mb-1' size='lg' />
             </div>
           ) : (
-            <div style={{}}>{anexo.url}</div>
+            <div style={{}}>Clic para ir al enlace</div>
           )}
         </CardBody>
       </Card>
