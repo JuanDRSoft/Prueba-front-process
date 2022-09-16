@@ -43,6 +43,7 @@ const DetailProcess = ({ match, authUser }) => {
         });
       });
     };
+
     fetchProcess();
   }, []);
 
@@ -52,6 +53,7 @@ const DetailProcess = ({ match, authUser }) => {
         notificationWeb: false
       });
     };
+
     updateStateNotification();
   }, []);
 
@@ -131,8 +133,8 @@ const DetailProcess = ({ match, authUser }) => {
                       <PreviewAnexos
                         key={anexo.id}
                         anexo={anexo}
-                        loading={loading}
                         filingNumber={filingNumber}
+                        id={id}
                       />
                     ))
                   ) : (
@@ -166,7 +168,11 @@ const DetailProcess = ({ match, authUser }) => {
           </Colxx>
         </Row>
 
-        <AddNewTodoModal modalOpen={modalOpen} toggleModal={openModal} />
+        <AddNewTodoModal
+          modalOpen={modalOpen}
+          toggleModal={openModal}
+          anexos={anexos}
+        />
       </div>
     </>
   );
