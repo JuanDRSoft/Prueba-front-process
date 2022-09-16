@@ -5,7 +5,7 @@ import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import FormAnexos from 'views/app/detail/components/anexos/FormAnexos';
 
-const AddNewTodoModal = ({ modalOpen, toggleModal, filingNumber }) => {
+const AddNewTodoModal = ({ modalOpen, toggleModal, filingNumber, anexos }) => {
   return (
     <Modal
       isOpen={modalOpen}
@@ -17,7 +17,7 @@ const AddNewTodoModal = ({ modalOpen, toggleModal, filingNumber }) => {
         <IntlMessages id='Agregar Nuevo Anexo' />
       </ModalHeader>
       <ModalBody>
-        <FormAnexos filingNumber={filingNumber} />
+        <FormAnexos filingNumber={filingNumber} anexos={anexos} />
       </ModalBody>
     </Modal>
   );
