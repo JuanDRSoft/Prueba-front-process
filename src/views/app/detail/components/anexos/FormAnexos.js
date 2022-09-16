@@ -1,4 +1,5 @@
 import { Colxx } from 'components/common/CustomBootstrap';
+import { NotificationManager } from 'components/common/react-notifications';
 import clienteAxios from 'config/axios';
 import { Field, Formik } from 'formik';
 import React, { useState } from 'react';
@@ -7,7 +8,7 @@ import { useParams } from 'react-router-dom';
 import { Button, Form, FormGroup, Label, Row } from 'reactstrap';
 import * as Yup from 'yup';
 
-const FormAnexos = ({ authUser }) => {
+const FormAnexos = ({ authUser, anexos }) => {
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
 
@@ -19,6 +20,26 @@ const FormAnexos = ({ authUser }) => {
     e.preventDefault();
 
     if ([name, url].includes('')) {
+      NotificationManager.warning(
+        'Todos los campos son obligatorios',
+        'Anexo Warning',
+        3000,
+        null,
+        null,
+        ''
+      );
+      return;
+    }
+
+    if (anexos.some((element) => element.name === name)) {
+      NotificationManager.error(
+        'Este nombre de anexo ya existe',
+        'Anexo Error',
+        3000,
+        null,
+        null,
+        ''
+      );
       return;
     }
 
