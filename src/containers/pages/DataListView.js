@@ -14,11 +14,16 @@ const DataListView = ({ proceso, isSelect, collect, onCheckItem }) => {
     lastUpdateDate,
     sujetosProcesales,
     state,
-    notificationWeb
+    notificationWeb,
+    _id
   } = proceso;
   return (
     <Colxx xxs='12' className='mb-3'>
-      <ContextMenuTrigger id='menu_id' data={filingNumber} collect={collect}>
+      <ContextMenuTrigger
+        id='menu_id'
+        data={{ data: [{ filingNumber, id: _id }] }}
+        collect={collect}
+      >
         <Card
           onClick={(event) => onCheckItem(event, filingNumber)}
           className={classnames('d-flex flex-row', {
