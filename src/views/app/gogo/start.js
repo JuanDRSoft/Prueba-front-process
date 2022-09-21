@@ -142,12 +142,24 @@ const DataListPages = ({ match, authUser }) => {
     console.log('onContextMenuClick - selected items', selectedItems);
     console.log('onContextMenuClick - action : ', data.action);
 
-    clienteAxios
-      .get(`/process/updateState/${selectedItems[0]}`)
-      .then((result) => {
-        console.log(result);
-        setReloadData(!reloadData);
-      });
+    if (data.action === 'move') {
+      clienteAxios
+        .get(`/process/updateState/${selectedItems[0].data[0].filingNumber}`)
+        .then((result) => {
+          console.log(result);
+          setReloadData(!reloadData);
+        });
+    }
+
+    if (data.action === 'delete') {
+      console.log(selectedItems[0].data[0].id);
+      clienteAxios
+        .delete(`/process/${selectedItems[0].data[0].id}`)
+        .then((result) => {
+          console.log(result);
+          setReloadData(!reloadData);
+        });
+    }
   };
 
   const onContextMenu = (e, data) => {
