@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
@@ -7,119 +7,224 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { forgotPassword } from 'redux/actions';
 import { NotificationManager } from 'components/common/react-notifications';
+import uri from 'constants/api';
+import axios from 'axios';
 
-const validateEmail = (value) => {
-  let error;
-  if (!value) {
-    error = 'Please enter your email address';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-    error = 'Invalid email address';
-  }
-  return error;
-};
+const ForgotPassword = () => {
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [pregunta, setPregunta] = useState(0);
+  const [uid, setUid] = useState('');
+  const [newUid, setNewUid] = useState('');
 
-const ForgotPassword = ({
-  history,
-  forgotUserMail,
-  loading,
-  error,
-  forgotPasswordAction,
-}) => {
-  const [email] = useState('');
+  const handelEnviar = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-  const onForgotPassword = (values) => {
-    if (!loading) {
-      if (values.email !== '') {
-        forgotPasswordAction(values, history);
-      }
+    if ([email].includes('')) {
+      NotificationManager.warning(
+        'Llena todos los campos vacios',
+        'Advertencia',
+        3000,
+        null,
+        null,
+        ''
+      );
+
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const data = await axios.post(`${uri}/lawyer/password`, {
+        email
+      });
+      console.log(data);
+      setPregunta(pregunta + 1);
+      NotificationManager.success(
+        data.data.msg,
+        'Verifica tu correo electronico',
+        6000,
+        null,
+        null,
+        ''
+      );
+      setLoading(false);
+    } catch (error) {
+      NotificationManager.error(
+        error.response.data.msg,
+        'Error de envio',
+        3000,
+        null,
+        null,
+        ''
+      );
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (error) {
-      NotificationManager.warning(
-        error,
-        'Forgot Password Error',
-        3000,
-        null,
-        null,
-        ''
-      );
-    } else if (!loading && forgotUserMail === 'success')
-      NotificationManager.success(
-        'Please check your email.',
-        'Forgot Password Success',
-        3000,
-        null,
-        null,
-        ''
-      );
-  }, [error, forgotUserMail, loading]);
+  const onForgotPassword = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-  const initialValues = { email };
+    if ([email, uid, newUid].includes('')) {
+      NotificationManager.warning(
+        'Llena todos los campos vacios',
+        'Advertencia',
+        3000,
+        null,
+        null,
+        ''
+      );
+
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const data = await axios.post(`${uri}/lawyer/newPassword`, {
+        email,
+        uid,
+        newUid
+      });
+
+      NotificationManager.success(
+        data.data.msg,
+        'Verifica tu correo electronico',
+        6000,
+        null,
+        null,
+        ''
+      );
+      window.location.href = '/';
+      setLoading(false);
+    } catch (error) {
+      NotificationManager.error(
+        error.response.data.msg,
+        'Error de codigo de seguridad',
+        3000,
+        null,
+        null,
+        ''
+      );
+      setLoading(false);
+    }
+  };
+
+  const initialValues = { email, uid, newUid };
 
   return (
-    <Row className="h-100">
-      <Colxx xxs="12" md="10" className="mx-auto my-auto">
-        <Card className="auth-card">
-          <div className="position-relative image-side ">
-            <p className="text-white h2">MVP APP PROCESS</p>
-            <p className="white mb-0">
+    <Row className='h-100'>
+      <Colxx xxs='12' md='10' className='mx-auto my-auto'>
+        <Card className='auth-card'>
+          <div className='position-relative image-side '>
+            <p className='text-white h2'>MVP APP PROCESS</p>
+            <p className='white mb-0'>
               Please use your e-mail to reset your password. <br />
               If you are not a member, please{' '}
-              <NavLink to="/user/register" className="white">
+              <NavLink to='/user/register' className='white'>
                 register
               </NavLink>
               .
             </p>
           </div>
-          <div className="form-side">
-            <NavLink to="/" className="white">
-              <span className="logo-single" />
+          <div className='form-side'>
+            <NavLink to='/' className='white'>
+              <span className='logo-single' />
             </NavLink>
-            <CardTitle className="mb-4">
-              <IntlMessages id="user.forgot-password" />
+            <CardTitle className='mb-4'>
+              <IntlMessages id='user.forgot-password' />
             </CardTitle>
 
-            <Formik initialValues={initialValues} onSubmit={onForgotPassword}>
-              {({ errors, touched }) => (
-                <Form className="av-tooltip tooltip-label-bottom">
-                  <FormGroup className="form-group has-float-label">
-                    <Label>
-                      <IntlMessages id="user.email" />
-                    </Label>
-                    <Field
-                      className="form-control"
-                      name="email"
-                      validate={validateEmail}
-                    />
-                    {errors.email && touched.email && (
-                      <div className="invalid-feedback d-block">
-                        {errors.email}
-                      </div>
-                    )}
-                  </FormGroup>
+            <Formik initialValues={initialValues}>
+              {() => (
+                <Form className='av-tooltip tooltip-label-bottom'>
+                  {pregunta === 0 ? (
+                    <FormGroup className='form-group has-float-label'>
+                      <Label>
+                        <IntlMessages id='user.email' />
+                      </Label>
+                      <Field
+                        className='form-control'
+                        name='email'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </FormGroup>
+                  ) : null}
 
-                  <div className="d-flex justify-content-between align-items-center">
-                    <NavLink to="/user/forgot-password">
-                      <IntlMessages id="user.forgot-password-question" />
+                  {pregunta === 1 ? (
+                    <div>
+                      <FormGroup className='form-group has-float-label'>
+                        <Label>
+                          <IntlMessages id='Codigo Seguridad' />
+                        </Label>
+                        <Field
+                          className='form-control'
+                          name='codigo'
+                          value={uid}
+                          onChange={(e) => setUid(e.target.value)}
+                        />
+                      </FormGroup>
+                      <FormGroup className='form-group has-float-label'>
+                        <Label>
+                          <IntlMessages id='Nueva Contraseña' />
+                        </Label>
+                        <Field
+                          className='form-control'
+                          name='password'
+                          type='password'
+                          value={newUid}
+                          onChange={(e) => setNewUid(e.target.value)}
+                        />
+                      </FormGroup>
+                    </div>
+                  ) : null}
+
+                  <div className='d-flex justify-content-between align-items-center'>
+                    <NavLink to='/user/forgot-password'>
+                      <IntlMessages id='user.forgot-password-question' />
                     </NavLink>
-                    <Button
-                      color="primary"
-                      className={`btn-shadow btn-multiple-state ${
-                        loading ? 'show-spinner' : ''
-                      }`}
-                      size="lg"
-                    >
-                      <span className="spinner d-inline-block">
-                        <span className="bounce1" />
-                        <span className="bounce2" />
-                        <span className="bounce3" />
-                      </span>
-                      <span className="label">
-                        <IntlMessages id="user.reset-password-button" />
-                      </span>
-                    </Button>
+
+                    {pregunta === 0 ? (
+                      <Button
+                        color='primary'
+                        className={`btn-shadow btn-multiple-state ${
+                          loading ? 'show-spinner' : ''
+                        }`}
+                        size='lg'
+                        onClick={handelEnviar}
+                      >
+                        <span className='spinner d-inline-block'>
+                          <span className='bounce1' />
+                          <span className='bounce2' />
+                          <span className='bounce3' />
+                        </span>
+                        <span className='label'>
+                          <IntlMessages id='ENVIAR CODIGO' />
+                        </span>
+                      </Button>
+                    ) : null}
+
+                    {pregunta === 1 ? (
+                      <Button
+                        color='primary'
+                        className={`btn-shadow btn-multiple-state ${
+                          loading ? 'show-spinner' : ''
+                        }`}
+                        size='lg'
+                        onClick={onForgotPassword}
+                      >
+                        <span className='spinner d-inline-block'>
+                          <span className='bounce1' />
+                          <span className='bounce2' />
+                          <span className='bounce3' />
+                        </span>
+                        <span className='label'>
+                          <IntlMessages id='GUARDAR' />
+                        </span>
+                      </Button>
+                    ) : null}
                   </div>
                 </Form>
               )}
@@ -137,5 +242,5 @@ const mapStateToProps = ({ authUser }) => {
 };
 
 export default connect(mapStateToProps, {
-  forgotPasswordAction: forgotPassword,
+  forgotPasswordAction: forgotPassword
 })(ForgotPassword);
