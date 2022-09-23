@@ -23,6 +23,14 @@ const DetailProcess = ({ match, authUser }) => {
 
   const { currentUser } = authUser;
   const { id } = currentUser;
+  const {
+    filingNumber,
+    lastUpdateDate,
+    despacho,
+    departamento,
+    sujetosProcesales,
+    _id
+  } = data;
 
   useEffect(() => {
     const fetchProcess = async () => {
@@ -37,19 +45,28 @@ const DetailProcess = ({ match, authUser }) => {
             setProcesos(resultProcess.data.actuaciones);
             setLoading(false);
           });
-
-        clienteAxios.get(`/process/anexos/${params.id}/${id}`).then((anexo) => {
-          setAnexos(anexo.data.link);
-        });
       });
     };
 
+    const getAnexos = async () => {
+      try {
+        const dataLink = await clienteAxios.get(
+          `/process/anexos/${filingNumber}/${id}`
+        );
+
+        setAnexos(dataLink);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getAnexos();
     fetchProcess();
   }, []);
 
   useEffect(() => {
     const updateStateNotification = async () => {
-      clienteAxios.put(`/process/${params.id}`, {
+      await clienteAxios.put(`/process/${_id}`, {
         notificationWeb: false
       });
     };
@@ -70,14 +87,6 @@ const DetailProcess = ({ match, authUser }) => {
       <Proceso proceso={proceso} key={proceso.idRegActuacion} />
     ));
   };
-
-  const {
-    filingNumber,
-    lastUpdateDate,
-    despacho,
-    departamento,
-    sujetosProcesales
-  } = data;
 
   return (
     <>
