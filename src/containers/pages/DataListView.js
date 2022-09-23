@@ -35,10 +35,7 @@ const DataListView = ({ proceso, isSelect, collect, onCheckItem }) => {
               className='card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center'
               style={{ gap: '15px' }}
             >
-              <NavLink
-                to={`/app/detail/${filingNumber}`}
-                className='w-40 w-sm-100'
-              >
+              <NavLink to={`/app/detail/${_id}`} className='w-40 w-sm-100'>
                 <p>Radicado: {filingNumber}</p>
                 <p className='list-item-heading mb-1 truncate'>{despacho}</p>
                 <p className='list-item-heading mb-1 truncate'>
