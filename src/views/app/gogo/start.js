@@ -144,7 +144,7 @@ const DataListPages = ({ match, authUser }) => {
 
     if (data.action === 'move') {
       clienteAxios
-        .get(`/process/updateState/${selectedItems[0].data[0].filingNumber}`)
+        .get(`/process/updateState/${selectedItems[0].data[0].id}`)
         .then((result) => {
           console.log(result);
           setReloadData(!reloadData);
