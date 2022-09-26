@@ -4,15 +4,13 @@ import clienteAxios from 'config/axios';
 import { Field, Formik } from 'formik';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { Button, Form, FormGroup, Label, Row } from 'reactstrap';
 import * as Yup from 'yup';
 
-const FormAnexos = ({ authUser, anexos }) => {
+const FormAnexos = ({ authUser, anexos, filingNumber }) => {
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
 
-  const params = useParams();
   const { currentUser } = authUser;
   const { id } = currentUser;
 
@@ -43,9 +41,12 @@ const FormAnexos = ({ authUser, anexos }) => {
       return;
     }
 
-    const data = await clienteAxios.put(`/process/anexos/${params.id}/${id}`, {
-      link: [{ name, url }]
-    });
+    const data = await clienteAxios.put(
+      `/process/anexos/${filingNumber}/${id}`,
+      {
+        link: [{ name, url }]
+      }
+    );
     console.log(data, 'data');
     window.location.reload();
   };
