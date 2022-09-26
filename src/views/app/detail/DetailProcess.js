@@ -72,7 +72,7 @@ const DetailProcess = ({ match, authUser }) => {
     };
 
     updateStateNotification();
-  }, []);
+  }, [_id]);
 
   if (!data?.lawyer) {
     return <></>;
