@@ -10,14 +10,14 @@ import {
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import clienteAxios from '../../config/axios';
 
-const NotificationItem = ({ lastUpdateDate, filingNumber, despacho }) => {
+const NotificationItem = ({ lastUpdateDate, filingNumber, despacho, _id }) => {
   return (
     <div
       className='d-flex flex-row mb-3 pb-3 border-bottom'
       style={{ alignItems: 'center' }}
     >
       <div className=''>
-        <NavLink href={`/app/detail/${filingNumber}`}>
+        <NavLink href={`/app/detail/${_id}`}>
           <p
             style={{
               display: 'flex',
