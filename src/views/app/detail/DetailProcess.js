@@ -48,6 +48,10 @@ const DetailProcess = ({ match, authUser }) => {
       });
     };
 
+    fetchProcess();
+  }, []);
+
+  useEffect(() => {
     const getAnexos = async () => {
       try {
         const dataLink = await clienteAxios.get(
@@ -61,8 +65,7 @@ const DetailProcess = ({ match, authUser }) => {
     };
 
     getAnexos();
-    fetchProcess();
-  }, []);
+  }, [filingNumber]);
 
   useEffect(() => {
     const updateStateNotification = async () => {
