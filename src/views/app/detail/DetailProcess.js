@@ -36,6 +36,7 @@ const DetailProcess = ({ match, authUser }) => {
     const fetchProcess = async () => {
       clienteAxios.get(`/process/${params.id}`).then((result) => {
         setData(result.data);
+        setAnexos(result.data.link);
 
         clienteAxios
           .get(`/process/id/${result.data.idProceso}`)
@@ -50,22 +51,6 @@ const DetailProcess = ({ match, authUser }) => {
 
     fetchProcess();
   }, []);
-
-  useEffect(() => {
-    const getAnexos = async () => {
-      try {
-        const dataLink = await clienteAxios.get(
-          `/process/anexos/${filingNumber}/${id}`
-        );
-
-        setAnexos(dataLink);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getAnexos();
-  }, [filingNumber]);
 
   useEffect(() => {
     const updateStateNotification = async () => {
@@ -140,7 +125,7 @@ const DetailProcess = ({ match, authUser }) => {
                 <CardBody>
                   <CardTitle style={{ fontWeight: 'bold' }}>ANEXOS</CardTitle>
 
-                  {anexos.length > 0 ? (
+                  {anexos.length ? (
                     anexos.map((anexo) => (
                       <PreviewAnexos
                         key={anexo.id}
@@ -183,6 +168,7 @@ const DetailProcess = ({ match, authUser }) => {
         <AddNewTodoModal
           modalOpen={modalOpen}
           toggleModal={openModal}
+          filingNumber={filingNumber}
           anexos={anexos}
         />
       </div>
