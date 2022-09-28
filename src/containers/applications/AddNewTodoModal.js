@@ -15,6 +15,11 @@ const AddNewTodoModal = ({ modalOpen, toggleModal, filingNumber, anexos }) => {
     >
       <ModalHeader toggle={toggleModal}>
         <IntlMessages id='Agregar Nuevo Anexo' />
+          <p style={{ marginBottom: -10, marginTop: 5, color: '#0071bd' }}>
+          Recuerda que la carpeta esta almacenada en servidores de la Rama
+          Judicial, por lo tanto estará sujeta a las condiciones externas de
+          disponibilidad ajenas a la app.{' '}
+        </p>
       </ModalHeader>
       <ModalBody>
         <FormAnexos filingNumber={filingNumber} anexos={anexos} />
