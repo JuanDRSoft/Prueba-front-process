@@ -76,7 +76,7 @@ const BlankPage = ({ match, authUser }) => {
     const url = 'https://api.mercadopago.com/checkout/preferences';
 
     const body = {
-      payer: { email: 'test_user_49925203@testuser.com' },
+      payer: { email: 'test_user_67773890@testuser.com' },
       items: [
         {
           id: `${_id}`,
@@ -100,7 +100,7 @@ const BlankPage = ({ match, authUser }) => {
     const paymentData = await clienteAxios.post(url, body, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer APP_USR-3358235138150118-080815-8185f95057c925ac403db991da834eb0-1175458796`
+        Authorization: `Bearer APP_USR-7428682502971385-101011-3bf5f0f6dee905d73e5d94f0b7a527a3-1214673637`
       }
     });
 
