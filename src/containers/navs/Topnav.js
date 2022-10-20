@@ -32,6 +32,7 @@ import { MobileMenuIcon, MenuIcon } from 'components/svg';
 /* import TopnavEasyAccess from './Topnav.EasyAccess'; */
 import TopnavNotifications from './Topnav.Notifications';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
+import TopNavCalendar from './Topnav.Calendar';
 
 const TopNav = ({
   history,
@@ -141,6 +142,7 @@ const TopNav = ({
       <div className='navbar-right'>
         {isDarkSwitchActive && <TopnavDarkSwitch />}
         <div className='header-icons d-inline-block align-middle'>
+          <TopNavCalendar />
           <TopnavNotifications />
         </div>
         <div className='user d-inline-block'>
