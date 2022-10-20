@@ -1,31 +1,11 @@
 import { Colxx } from 'components/common/CustomBootstrap';
 import React from 'react';
-import moment from 'moment';
 import { Card, CardBody, CardTitle, Row } from 'reactstrap';
 
 const PreviewEventos = ({ event }) => {
   const { title, creado, process, start, end } = event;
 
   const fecha = creado.split('T')[0];
-
-  const label = (e) => {
-    const date = moment(new Date(e));
-    return (
-      <span>
-        <span>{date.format('MMMM')} </span>
-        <span>
-          {' '}
-          {date.format('DD')}
-          {','}
-        </span>
-        <span>
-          {' '}
-          {date.format('YYYY')} {'-'}
-        </span>
-        <span> {date.format('HH:mm')} </span>
-      </span>
-    );
-  };
 
   return (
     <Row className='mt-2'>
@@ -41,9 +21,9 @@ const PreviewEventos = ({ event }) => {
 
             <div style={{ display: 'flex' }}>
               <i className='simple-icon-clock mr-2 mt-1' />
-              <p>Inicia: {label(start)}</p>
+              <p>Inicia: {start}</p>
               <p className='ml-2 mr-2'>|</p>
-              <p>Termina: {label(end)}</p>
+              <p>Termina: {end}</p>
             </div>
 
             {process && <p>Proceso enlazado: {process}</p>}
