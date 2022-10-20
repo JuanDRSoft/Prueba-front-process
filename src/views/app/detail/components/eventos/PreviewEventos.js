@@ -21,9 +21,17 @@ const PreviewEventos = ({ event }) => {
 
             <div style={{ display: 'flex' }}>
               <i className='simple-icon-clock mr-2 mt-1' />
-              <p>Inicia: {start}</p>
+              <p>
+                Inicia: {start.split('T')[0]}
+                {' / '}
+                {start.split('T')[1].split('.')[0]}
+              </p>
               <p className='ml-2 mr-2'>|</p>
-              <p>Termina: {end}</p>
+              <p>
+                Termina: {end.split('T')[0]}
+                {' / '}
+                {end.split('T')[1].split('.')[0]}
+              </p>
             </div>
 
             {process && <p>Proceso enlazado: {process}</p>}
