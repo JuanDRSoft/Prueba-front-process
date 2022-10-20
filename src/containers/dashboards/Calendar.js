@@ -1,31 +1,27 @@
 import React from 'react';
-import { Card, CardBody, CardTitle } from 'reactstrap';
+import { Card, CardBody } from 'reactstrap';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 
 import CalendarToolbar from 'components/CalendarToolbar';
-import IntlMessages from 'helpers/IntlMessages';
-import data from 'data/events';
 
 import { getDirection } from 'helpers/Utils';
+// import data from 'data/events';
 
 const localizer = momentLocalizer(moment);
 
-const CalendarCard = () => {
+const CalendarCard = ({ events }) => {
   return (
     <Card>
       <CardBody>
-        <CardTitle>
-          <IntlMessages id="dashboards.calendar" />
-        </CardTitle>
         <Calendar
           localizer={localizer}
-          style={{ minHeight: '500px' }}
-          events={data}
+          style={{ minHeight: '700px' }}
+          events={events}
           rtl={getDirection().isRtl}
           views={['month']}
           components={{
-            toolbar: CalendarToolbar,
+            toolbar: CalendarToolbar
           }}
         />
       </CardBody>
