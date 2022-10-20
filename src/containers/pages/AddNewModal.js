@@ -129,11 +129,11 @@ const AddNewModal = ({ modalOpen, toggleModal, idLawyer, reloadFnData }) => {
   return (
     <Modal
       isOpen={modalOpen}
-      toggle={toggleModal}
+      toggle={modalOpen}
       wrapClassName='modal-right'
       backdrop='static'
     >
-      <ModalHeader toggle={toggleModal}>
+      <ModalHeader toggle={modalOpen}>
         <IntlMessages id='pages.add-new-modal-title' />
       </ModalHeader>
       <ModalBody>
@@ -143,7 +143,7 @@ const AddNewModal = ({ modalOpen, toggleModal, idLawyer, reloadFnData }) => {
         <Input value={fillingN} onChange={(e) => setFillingN(e.target.value)} />
       </ModalBody>
       <ModalFooter>
-        <Button color='secondary' outline onClick={toggleModal}>
+        <Button color='secondary' outline onClick={modalOpen}>
           <IntlMessages id='pages.cancel' />
         </Button>
         {loading && <Spinner color='primary' className='mb-1' />}
