@@ -1,24 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Autosuggest from 'react-autosuggest';
 
-const getSuggestionValue = (suggestion) => suggestion.name;
+const getSuggestionValue = (suggestion) => suggestion.filingNumber;
 
-const renderSuggestion = (suggestion) => <div>{suggestion.name}</div>;
+const renderSuggestion = (suggestion) => (
+  <div>
+    Radicado: {suggestion.filingNumber} - Despacho: {suggestion.despacho} -
+    Sujetos: {suggestion.sujetosProcesales}
+  </div>
+);
 
 const ReactAutoSuggest = ({ data, value, placeholder, onChange }) => {
   const [valueState, setValueState] = useState(value);
-  const [dataState] = useState(data || []);
+  const [dataState, setDataState] = useState([data]);
   const [suggestions, setSuggestions] = useState([]);
+
+  useEffect(() => {
+    setDataState(data);
+  });
 
   const getSuggestions = (val) => {
     if (val) {
       const inputValue = val.trim().toLowerCase();
       const inputLength = inputValue.length;
-
       return inputLength === 0
         ? []
         : dataState.filter(
-            (d) => d.name.toLowerCase().slice(0, inputLength) === inputValue
+            (d) =>
+              d.despacho.toLowerCase().slice(0, inputLength) === inputValue ||
+              d.filingNumber.toLowerCase().slice(0, inputLength) ===
+                inputValue ||
+              d.sujetosProcesales.toLowerCase().slice(0, inputLength) ===
+                inputValue
           );
     }
     return dataState;
@@ -40,7 +53,7 @@ const ReactAutoSuggest = ({ data, value, placeholder, onChange }) => {
   const inputProps = {
     placeholder: placeholder || '',
     value: valueState,
-    onChange: changeInput,
+    onChange: changeInput
   };
 
   return (
@@ -62,7 +75,7 @@ const ReactAutoSuggest = ({ data, value, placeholder, onChange }) => {
           suggestions.length ? 'show' : ''
         }`,
         suggestionFocused: 'active',
-        suggestion: 'react-autosuggest__suggestion',
+        suggestion: 'react-autosuggest__suggestion'
       }}
     />
   );
