@@ -99,7 +99,7 @@ const EventNotificationItem = ({ title, start, creado, handleOpenModal }) => {
           {title}
         </p>
         <p style={{ display: 'flex', justifyContent: 'center' }}>
-          Inicia: {start.split('T')[0]} / {start.split('T')[1].split(':00')[0]}{' '}
+          Inicia: {start.split('T')[0]} / {start.split('T')[1].split(':00.')[0]}{' '}
           {start.split('T')[1].split(':')[0] > 11 ? 'pm' : 'am'}
         </p>
 
