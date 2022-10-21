@@ -24,14 +24,14 @@ const PreviewEventos = ({ event }) => {
               <p>
                 Inicia: {start.split('T')[0]}
                 {' / '}
-                {start.split('T')[1].split(':00')[0]}{' '}
+                {start.split('T')[1].split(':00.')[0]}{' '}
                 {start.split('T')[1].split(':')[0] > 11 ? 'pm' : 'am'}
               </p>
               <p className='ml-2 mr-2'>|</p>
               <p>
                 Termina: {end.split('T')[0]}
                 {' / '}
-                {end.split('T')[1].split(':00')[0]}{' '}
+                {end.split('T')[1].split(':00.')[0]}{' '}
                 {end.split('T')[1].split(':')[0] > 11 ? 'pm' : 'am'}
               </p>
             </div>
