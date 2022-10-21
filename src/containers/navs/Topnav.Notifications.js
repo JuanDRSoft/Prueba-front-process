@@ -8,6 +8,7 @@ import {
   Badge
 } from 'reactstrap';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import ModalCalendar from 'containers/pages/ModalCalendar';
 import clienteAxios from '../../config/axios';
 
 const NotificationItem = ({ lastUpdateDate, filingNumber, despacho, _id }) => {
@@ -28,13 +29,6 @@ const NotificationItem = ({ lastUpdateDate, filingNumber, despacho, _id }) => {
           >
             Radicado: {filingNumber}
           </p>
-
-          {/* <p
-            className='mb-1'
-            style={{ display: 'flex', fontSize: 12, marginBottom: -5 }}
-          >
-            {sujetosProcesales}
-          </p> */}
 
           <p
             style={{
@@ -61,8 +55,73 @@ const NotificationItem = ({ lastUpdateDate, filingNumber, despacho, _id }) => {
   );
 };
 
+const EventNotificationItem = ({ title, start, creado, handleOpenModal }) => {
+  return (
+    <div
+      className='d-flex flex-row mb-3 pb-1 border-bottom'
+      style={{ alignItems: 'center' }}
+    >
+      <div>
+        <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex', marginRight: 50, color: 'black' }}>
+            <i
+              className='iconsminds-clock mr-1'
+              style={{ fontSize: 15, marginTop: -2 }}
+            />
+            <p style={{ fontSize: 13 }}>Recordatorio</p>
+          </div>
+
+          <div>
+            <p
+              style={{
+                fontSize: 10,
+                color: 'gray'
+              }}
+            >
+              {creado.split('T')[0]}
+            </p>
+          </div>
+        </div>
+
+        <p
+          style={{
+            display: '-webkit-box',
+            fontSize: 12,
+            marginBottom: 5,
+            lineHeight: 1.5,
+            marginTop: -5,
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            marginLeft: 10
+          }}
+        >
+          {title}
+        </p>
+        <p style={{ display: 'flex', justifyContent: 'center' }}>
+          Inicia: {start.split('T')[0]} / {start.split('T')[1].split(':00')[0]}{' '}
+          {start.split('T')[1].split(':')[0] > 11 ? 'pm' : 'am'}
+        </p>
+
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <button
+            type='button'
+            className='btn btn-link'
+            style={{ marginTop: -20, fontSize: 11, marginBottom: -5 }}
+            onClick={handleOpenModal}
+          >
+            Ver mas
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const TopnavNotifications = () => {
   const [process, setProcess] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     const getProcess = async () => {
@@ -71,12 +130,27 @@ const TopnavNotifications = () => {
       setProcess(processData.data);
     };
 
+    const getEvent = async () => {
+      const processData = await clienteAxios.get('/event/all/bylawyer');
+      console.log('Data', processData);
+      setEvents(processData.data);
+    };
+
+    getEvent();
     getProcess();
   }, []);
 
   const notifications = process
     ? process.filter((e) => e.notificationWeb === true)
     : [];
+
+  const eventNotifications = events
+    ? events.filter((e) => e.notification === true)
+    : [];
+
+  const handleOpenModal = () => {
+    setModalOpen(!modalOpen);
+  };
 
   return (
     <div className='position-relative d-inline-block'>
@@ -86,7 +160,9 @@ const TopnavNotifications = () => {
           color='empty'
         >
           <i className='simple-icon-bell' />
-          <span className='count'>{notifications.length}</span>
+          <span className='count'>
+            {notifications.length + eventNotifications.length}
+          </span>
         </DropdownToggle>
         <DropdownMenu
           className='position-absolute mt-3 scroll'
@@ -99,9 +175,21 @@ const TopnavNotifications = () => {
             {notifications.map((notification, index) => {
               return <NotificationItem key={index} {...notification} />;
             })}
+
+            {eventNotifications.map((notification, index) => {
+              return (
+                <EventNotificationItem
+                  key={index}
+                  {...notification}
+                  handleOpenModal={handleOpenModal}
+                />
+              );
+            })}
           </PerfectScrollbar>
         </DropdownMenu>
       </UncontrolledDropdown>
+
+      <ModalCalendar handleOpenModal={handleOpenModal} modalOpen={modalOpen} />
     </div>
   );
 };
