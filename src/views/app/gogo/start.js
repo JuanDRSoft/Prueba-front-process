@@ -229,7 +229,7 @@ const DataListPages = ({ match, authUser }) => {
         />
         <AddNewModal
           modalOpen={modalOpen}
-          toggleModal={() => setModalOpen(!modalOpen)}
+          toggleModal={setModalOpen}
           categories={categories}
           idLawyer={idLawyer}
           reloadFnData={reloadFnData}
