@@ -19,6 +19,10 @@ const AddNewModal = ({ modalOpen, toggleModal, idLawyer, reloadFnData }) => {
   const [fillingN, setFillingN] = useState();
   const [loading, setLoading] = useState(false);
 
+  const cerrar = () => {
+    toggleModal(!modalOpen);
+  };
+
   const createNotification = (type, className, msg) => {
     const cName = className || '';
     switch (type) {
@@ -129,11 +133,11 @@ const AddNewModal = ({ modalOpen, toggleModal, idLawyer, reloadFnData }) => {
   return (
     <Modal
       isOpen={modalOpen}
-      toggle={modalOpen}
+      toggle={cerrar}
       wrapClassName='modal-right'
       backdrop='static'
     >
-      <ModalHeader toggle={modalOpen}>
+      <ModalHeader toggle={cerrar}>
         <IntlMessages id='pages.add-new-modal-title' />
       </ModalHeader>
       <ModalBody>
@@ -143,7 +147,7 @@ const AddNewModal = ({ modalOpen, toggleModal, idLawyer, reloadFnData }) => {
         <Input value={fillingN} onChange={(e) => setFillingN(e.target.value)} />
       </ModalBody>
       <ModalFooter>
-        <Button color='secondary' outline onClick={modalOpen}>
+        <Button color='secondary' outline onClick={cerrar}>
           <IntlMessages id='pages.cancel' />
         </Button>
         {loading && <Spinner color='primary' className='mb-1' />}
