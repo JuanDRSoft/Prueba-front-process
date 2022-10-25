@@ -36,7 +36,6 @@ const ModalEvent = ({
   useEffect(() => {
     if (id) {
       setStart(event.start.split(':00.')[0]);
-      setEnd(event.end);
       setTitle(event.title);
       setProcess(event.process);
     }
@@ -83,8 +82,6 @@ const ModalEvent = ({
     }
   };
 
-  console.log(start);
-
   const createEvent = async () => {
     setLoading(true);
 
@@ -93,12 +90,13 @@ const ModalEvent = ({
       setLoading(false);
       return;
     }
+    const final = end === '' ? start : end;
 
     try {
       const eventData = await axios.post(`${uri}/event`, {
         title,
         start,
-        end,
+        end: final,
         process,
         lawyer
       });
@@ -125,11 +123,13 @@ const ModalEvent = ({
       return;
     }
 
+    const final = end === '' ? start : end;
+
     try {
       const eventData = await axios.put(`${uri}/event/${id}`, {
         title,
         start,
-        end,
+        end: final,
         process,
         lawyer
       });
