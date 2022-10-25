@@ -10,6 +10,7 @@ import clienteAxios from '../../../config/axios';
 import Proceso from './components/Proceso/Proceso';
 import style from './detailcss.module.css';
 import PreviewAnexos from './components/anexos/PreviewAnexos';
+import PreviewEventos from './components/eventos/PreviewEventos';
 
 const DetailProcess = ({ match, authUser }) => {
   const [data, setData] = useState({});
@@ -18,6 +19,7 @@ const DetailProcess = ({ match, authUser }) => {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [anexos, setAnexos] = useState([]);
+  const [events, setEvents] = useState([]);
 
   const params = useParams();
 
@@ -49,6 +51,13 @@ const DetailProcess = ({ match, authUser }) => {
       });
     };
 
+    const getAllData = async () => {
+      const countDataAll = await clienteAxios.get('/event/all/bylawyer');
+      setEvents(countDataAll.data);
+    };
+
+    getAllData();
+
     fetchProcess();
   }, []);
 
@@ -69,6 +78,8 @@ const DetailProcess = ({ match, authUser }) => {
   const openModal = () => {
     setModalOpen(!modalOpen);
   };
+
+  const eventos = events.filter((e) => e.process === filingNumber);
 
   const renderProcesos = () => {
     return procesos.map((proceso) => (
@@ -144,6 +155,25 @@ const DetailProcess = ({ match, authUser }) => {
                   </Button>
                 </CardBody>
               </Card>
+
+              {eventos.map((e) => (
+                <Card
+                  key={e}
+                  className='mt-4'
+                  style={{ backgroundColor: 'white' }}
+                >
+                  <CardBody>
+                    <CardTitle style={{ fontWeight: 'bold' }}>
+                      EVENTOS
+                    </CardTitle>
+                    <PreviewEventos
+                      event={e}
+                      events={events}
+                      setEvents={setEvents}
+                    />
+                  </CardBody>
+                </Card>
+              ))}
             </Card>
           </Colxx>
 
