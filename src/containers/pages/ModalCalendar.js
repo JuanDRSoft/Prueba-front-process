@@ -71,7 +71,14 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
         </Row>
 
         {events.length > 0 ? (
-          events.map((event) => <PreviewEventos event={event} key={event} />)
+          events.map((event) => (
+            <PreviewEventos
+              event={event}
+              key={event}
+              setEvents={setEvents}
+              events={events}
+            />
+          ))
         ) : (
           <p style={{ textAlign: 'center', marginTop: 10 }}>
             NO HAY EVENTOS REGISTRADOS AUN

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   Modal,
@@ -21,7 +21,10 @@ const ModalEvent = ({
   modalOpenEvent,
   handleOpenModalEvent,
   setEvents,
-  events
+  events,
+  event,
+  id,
+  endEvento
 }) => {
   const [creado] = useState(new Date());
   const [loading, setLoading] = useState(false);
@@ -29,6 +32,21 @@ const ModalEvent = ({
   const [start, setStart] = useState('');
   const [title, setTitle] = useState('');
   const [process, setProcess] = useState('');
+
+  useEffect(() => {
+    if (id) {
+      setStart(event.start.split(':00.')[0]);
+      setEnd(event.end);
+      setTitle(event.title);
+      setProcess(event.process);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (endEvento) {
+      setEnd(endEvento.split(':00.')[0]);
+    }
+  }, [endEvento]);
 
   const lawyer = localStorage.getItem('token');
 
@@ -70,7 +88,7 @@ const ModalEvent = ({
   const createEvent = async () => {
     setLoading(true);
 
-    if ([start, title, end].includes('')) {
+    if ([start, title].includes('')) {
       createNotification('error', 'filled', 'Campos obligatorios');
       setLoading(false);
       return;
@@ -98,6 +116,44 @@ const ModalEvent = ({
     }
   };
 
+  const editEvent = async () => {
+    setLoading(true);
+
+    if ([start, title].includes('')) {
+      createNotification('error', 'filled', 'Campos obligatorios');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const eventData = await axios.put(`${uri}/event/${id}`, {
+        title,
+        start,
+        end,
+        process,
+        lawyer
+      });
+
+      const eventUpdate = events.map((e) =>
+        // eslint-disable-next-line no-underscore-dangle
+        e._id === id ? eventData.data : e
+      );
+
+      setEvents(eventUpdate);
+      console.log(eventData.data);
+      createNotification('success', 'filled', 'Evento editado correctamente');
+
+      setLoading(false);
+      setTimeout(() => {
+        handleOpenModalEvent();
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+      createNotification('error', 'filled', 'Campos obligatorios');
+      setLoading(false);
+    }
+  };
+
   return (
     <Modal
       isOpen={modalOpenEvent}
@@ -112,7 +168,11 @@ const ModalEvent = ({
           display: 'flex'
         }}
       >
-        <IntlMessages id='Registro De Evento' />
+        {id ? (
+          <IntlMessages id='Edición De Evento' />
+        ) : (
+          <IntlMessages id='Registro De Evento' />
+        )}
       </ModalHeader>
 
       <ModalBody>
@@ -157,9 +217,16 @@ const ModalEvent = ({
           <IntlMessages id='pages.cancel' />
         </Button>
         {loading && <Spinner color='primary' className='mb-1' />}
-        <Button color='primary' onClick={createEvent} disabled={loading}>
-          <IntlMessages id='Registrar Evento' />
-        </Button>
+
+        {id ? (
+          <Button color='primary' onClick={editEvent} disabled={loading}>
+            <IntlMessages id='Editar Evento' />
+          </Button>
+        ) : (
+          <Button color='primary' onClick={createEvent} disabled={loading}>
+            <IntlMessages id='Registrar Evento' />{' '}
+          </Button>
+        )}
       </ModalFooter>
     </Modal>
   );
