@@ -154,6 +154,31 @@ const ModalEvent = ({
     }
   };
 
+  const deletedEvent = async () => {
+    try {
+      const eventData = await axios.delete(`${uri}/event/${id}`);
+
+      const eventUpdate = events.filter(
+        (e) =>
+          // eslint-disable-next-line no-underscore-dangle
+          e._id !== id
+      );
+
+      setEvents(eventUpdate);
+      console.log(eventData.data);
+      createNotification('success', 'filled', 'Evento eliminado correctamente');
+
+      setLoading(false);
+      setTimeout(() => {
+        handleOpenModalEvent();
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+      createNotification('error', 'filled', 'Error al eliminar el evento');
+      setLoading(false);
+    }
+  };
+
   return (
     <Modal
       isOpen={modalOpenEvent}
@@ -212,21 +237,28 @@ const ModalEvent = ({
         <ReactAutoSugegstExample process={process} setProcess={setProcess} />
       </ModalBody>
 
-      <ModalFooter>
-        <Button color='secondary' outline onClick={handleOpenModalEvent}>
-          <IntlMessages id='pages.cancel' />
-        </Button>
-        {loading && <Spinner color='primary' className='mb-1' />}
-
-        {id ? (
-          <Button color='primary' onClick={editEvent} disabled={loading}>
-            <IntlMessages id='Editar Evento' />
-          </Button>
-        ) : (
-          <Button color='primary' onClick={createEvent} disabled={loading}>
-            <IntlMessages id='Registrar Evento' />{' '}
+      <ModalFooter style={id && { justifyContent: 'space-between' }}>
+        {id && (
+          <Button color='danger' onClick={deletedEvent} disabled={loading}>
+            <IntlMessages id='Eliminar Evento' />
           </Button>
         )}
+        <div style={{ display: 'flex', gap: 5 }}>
+          <Button color='secondary' outline onClick={handleOpenModalEvent}>
+            <IntlMessages id='pages.cancel' />
+          </Button>
+          {loading && <Spinner color='primary' className='mb-1' />}
+
+          {id ? (
+            <Button color='primary' onClick={editEvent} disabled={loading}>
+              <IntlMessages id='Editar Evento' />
+            </Button>
+          ) : (
+            <Button color='primary' onClick={createEvent} disabled={loading}>
+              <IntlMessages id='Registrar Evento' />{' '}
+            </Button>
+          )}
+        </div>
       </ModalFooter>
     </Modal>
   );
