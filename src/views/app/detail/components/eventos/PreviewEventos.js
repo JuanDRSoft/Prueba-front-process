@@ -54,7 +54,7 @@ const PreviewEventos = ({ event, events, setEvents }) => {
                 {start.split('T')[1].split(':00.')[0]}{' '}
                 {start.split('T')[1].split(':')[0] > 11 ? 'pm' : 'am'}
               </p>
-              {end && (
+              {end === start ? null : (
                 <div style={{ display: 'flex' }}>
                   <p className='ml-2 mr-2'>|</p>{' '}
                   <p>
