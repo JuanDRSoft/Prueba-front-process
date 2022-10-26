@@ -16,6 +16,15 @@ import { Colxx } from 'components/common/CustomBootstrap';
 import ReactAutoSugegstExample from 'containers/forms/ReactAutoSugegstExample';
 import axios from 'axios';
 import uri from 'constants/api';
+import ReactSelect from 'react-select';
+
+const typeEvent = [
+  { label: 'Procesales', value: 'Procesales' },
+  { label: 'Extraprocesales', value: 'Extraprocesales' },
+  { label: 'Tareas', value: 'Tareas' },
+  { label: 'Compromisos', value: 'Compromisos' },
+  { label: 'Audiencias', value: 'Audiencias' }
+];
 
 const ModalEvent = ({
   modalOpenEvent,
@@ -32,12 +41,14 @@ const ModalEvent = ({
   const [start, setStart] = useState('');
   const [title, setTitle] = useState('');
   const [process, setProcess] = useState('');
+  const [type, setType] = useState('');
 
   useEffect(() => {
     if (id) {
       setStart(event.start.split(':00.')[0]);
       setTitle(event.title);
       setProcess(event.process);
+      setType({ label: event.type, value: event.type });
     }
   }, []);
 
@@ -49,9 +60,9 @@ const ModalEvent = ({
 
   const lawyer = localStorage.getItem('token');
 
-  const createNotification = (type, className, msg) => {
+  const createNotification = (type1, className, msg) => {
     const cName = className || '';
-    switch (type) {
+    switch (type1) {
       case 'error':
         NotificationManager.error(
           msg,
@@ -85,7 +96,7 @@ const ModalEvent = ({
   const createEvent = async () => {
     setLoading(true);
 
-    if ([start, title].includes('')) {
+    if ([start, title, type].includes('')) {
       createNotification('error', 'filled', 'Campos obligatorios');
       setLoading(false);
       return;
@@ -98,7 +109,8 @@ const ModalEvent = ({
         start,
         end: final,
         process,
-        lawyer
+        lawyer,
+        type: type.value
       });
       setEvents([...events, eventData.data]);
       console.log(eventData.data);
@@ -106,6 +118,12 @@ const ModalEvent = ({
 
       setLoading(false);
       setTimeout(() => {
+        setStart('');
+        setTitle('');
+        setProcess('');
+        setType('');
+        setEnd('');
+
         handleOpenModalEvent();
       }, 2000);
     } catch (error) {
@@ -117,7 +135,7 @@ const ModalEvent = ({
   const editEvent = async () => {
     setLoading(true);
 
-    if ([start, title].includes('')) {
+    if ([start, title, type].includes('')) {
       createNotification('error', 'filled', 'Campos obligatorios');
       setLoading(false);
       return;
@@ -131,7 +149,8 @@ const ModalEvent = ({
         start,
         end: final,
         process,
-        lawyer
+        lawyer,
+        type: type.value
       });
 
       const eventUpdate = events.map((e) =>
@@ -201,8 +220,23 @@ const ModalEvent = ({
       </ModalHeader>
 
       <ModalBody>
-        <Label>Fecha de registro: </Label>
-        <Input value={creado} disabled />
+        <Row>
+          <Colxx xxs='6'>
+            <Label>Fecha de registro: </Label>
+            <Input value={creado} disabled />
+          </Colxx>
+
+          <Colxx xxs='6'>
+            <Label>Tipo de evento: </Label>
+            <ReactSelect
+              className='react-select'
+              classNamePrefix='react-select'
+              value={type}
+              options={typeEvent}
+              onChange={(e) => setType(e)}
+            />
+          </Colxx>
+        </Row>
 
         <Row className='mt-3'>
           <Colxx xxs='6'>
