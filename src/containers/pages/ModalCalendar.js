@@ -112,7 +112,7 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
     if (selectedFilterOption.column === 'otra') {
       const activos = events.filter(
         (e) =>
-          (new Date(e.start).getDate() === new Date(selectDate).getDate() &&
+          (new Date(e.start).getDate() === new Date(selectDate).getDate() + 1 &&
             new Date(e.start).getMonth() === new Date(selectDate).getMonth() &&
             getYear(new Date(e.start)) === getYear(new Date(selectDate))) ||
           selectedFilterType.column === e.type
