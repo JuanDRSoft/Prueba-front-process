@@ -113,6 +113,7 @@ const ModalEvent = ({
         type: type.value
       });
       setEvents([...events, eventData.data]);
+
       console.log(eventData.data);
       createNotification('success', 'filled', 'Evento registrado');
 
@@ -159,6 +160,7 @@ const ModalEvent = ({
       );
 
       setEvents(eventUpdate);
+
       console.log(eventData.data);
       createNotification('success', 'filled', 'Evento editado correctamente');
 
@@ -184,6 +186,7 @@ const ModalEvent = ({
       );
 
       setEvents(eventUpdate);
+
       console.log(eventData.data);
       createNotification('success', 'filled', 'Evento eliminado correctamente');
 
