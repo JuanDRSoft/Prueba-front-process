@@ -203,6 +203,10 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
                         setSelectedFilterOption(
                           filterOptions.find((x) => x.column === order.column)
                         );
+                        setSelectedFilterType({
+                          column: '',
+                          label: 'Cualquiera'
+                        });
                       }}
                     >
                       {order.label}
@@ -242,7 +246,8 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
                   value={selectDate}
                   onChange={(e) => setSelectDate(e.target.value)}
                   style={{
-                    width: 170,
+                    width: 220,
+                    height: 30,
                     borderRadius: 50,
                     float: 'right',
                     marginTop: 10
