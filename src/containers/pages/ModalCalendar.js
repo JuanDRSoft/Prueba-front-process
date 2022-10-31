@@ -53,6 +53,7 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
   });
   const [selectDate, setSelectDate] = useState('');
   const [items, setItems] = useState([]);
+  const [process, setProcess] = useState([]);
 
   useEffect(() => {
     const getAllData = async () => {
@@ -60,7 +61,13 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
       setEvents(countDataAll.data);
     };
 
+    const getAllProcess = async () => {
+      const countDataAll = await clienteAxios.get('/process/all/bylawyer');
+      setProcess(countDataAll.data);
+    };
+
     getAllData();
+    getAllProcess();
   }, []);
 
   useEffect(() => {
@@ -158,6 +165,7 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
             key={event}
             setEvents={setEvents}
             events={events}
+            process={process}
           />
         ))
     ) : (
