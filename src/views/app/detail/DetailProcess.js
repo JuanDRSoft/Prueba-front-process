@@ -20,6 +20,7 @@ const DetailProcess = ({ match, authUser }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [anexos, setAnexos] = useState([]);
   const [events, setEvents] = useState([]);
+  const [processEvent, setProcessEvent] = useState([]);
 
   const params = useParams();
 
@@ -56,8 +57,13 @@ const DetailProcess = ({ match, authUser }) => {
       setEvents(countDataAll.data);
     };
 
-    getAllData();
+    const getAllProcess = async () => {
+      const countDataAll = await clienteAxios.get('/process/all/bylawyer');
+      setProcessEvent(countDataAll.data);
+    };
 
+    getAllProcess();
+    getAllData();
     fetchProcess();
   }, []);
 
@@ -170,6 +176,7 @@ const DetailProcess = ({ match, authUser }) => {
                       event={e}
                       events={events}
                       setEvents={setEvents}
+                      process={processEvent}
                     />
                   </CardBody>
                 </Card>
