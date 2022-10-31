@@ -1,16 +1,19 @@
 import { Colxx } from 'components/common/CustomBootstrap';
 import ModalEvent from 'containers/pages/ModalEvent';
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { Card, CardBody, CardTitle, Row } from 'reactstrap';
 
-const PreviewEventos = ({ event, events, setEvents }) => {
+const PreviewEventos = ({ event, events, setEvents, process }) => {
   const [modalOpenEvent, setModalOpenEvent] = useState(false);
 
-  const { title, creado, process, start, end, _id } = event;
+  const { title, creado, start, end, _id } = event;
 
   const fecha = creado.split('T')[0];
 
   const endEvento = end;
+
+  const filtro = process.filter((pro) => pro.filingNumber === event.process);
 
   const handleOpenModalEvent = () => {
     setModalOpenEvent(!modalOpenEvent);
@@ -67,7 +70,13 @@ const PreviewEventos = ({ event, events, setEvents }) => {
               )}
             </div>
 
-            {process && <p>Proceso enlazado: {process}</p>}
+            {event.process &&
+              filtro.map((e) => (
+                // eslint-disable-next-line no-underscore-dangle
+                <NavLink to={`/app/detail/${e._id}`} key={e.name}>
+                  <p>Proceso enlazado: {e.filingNumber}</p>
+                </NavLink>
+              ))}
 
             <div
               style={{
