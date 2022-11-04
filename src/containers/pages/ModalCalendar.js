@@ -152,10 +152,10 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
       items
         .sort(function (a, b) {
           if (a.start > b.start) {
-            return -1;
+            return 1;
           }
           if (a.start < b.start) {
-            return 1;
+            return -1;
           }
           return 1;
         })
