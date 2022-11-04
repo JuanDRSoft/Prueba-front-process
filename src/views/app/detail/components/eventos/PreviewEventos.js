@@ -1,13 +1,15 @@
 import { Colxx } from 'components/common/CustomBootstrap';
 import ModalEvent from 'containers/pages/ModalEvent';
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { Card, CardBody, CardTitle, Row } from 'reactstrap';
 
 const PreviewEventos = ({ event, events, setEvents, process }) => {
   const [modalOpenEvent, setModalOpenEvent] = useState(false);
 
   const { title, creado, start, end, _id } = event;
+
+  const params = useParams();
 
   const fecha = creado.split('T')[0];
 
@@ -28,10 +30,27 @@ const PreviewEventos = ({ event, events, setEvents, process }) => {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
+                marginBottom: 8
               }}
             >
-              {title}
+              <p
+                style={
+                  params.id
+                    ? {
+                        fontSize: 18
+                      }
+                    : {
+                        fontSize: 18,
+                        display: '-webkit-box',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: 2,
+                        overflow: 'hidden'
+                      }
+                }
+              >
+                {title}
+              </p>
               <button
                 type='button'
                 className='btn btn-link'
