@@ -4,37 +4,35 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 
 import IntlMessages from 'helpers/IntlMessages';
-import data from 'data/logs';
 
-const Logs = () => {
+const Logs = ({ collaborator }) => {
   return (
     <div>
       <Card>
         <CardBody>
           <CardTitle>
-            <IntlMessages id="dashboards.logs" />
+            <IntlMessages id='Colaboradores Registrados' />
           </CardTitle>
-          <div className="dashboard-logs">
+          <div className='dashboard-logs'>
             <PerfectScrollbar
               options={{ suppressScrollX: true, wheelPropagation: false }}
             >
-              <table className="table table-sm table-borderless">
+              <table className='table table-sm table-borderless'>
                 <tbody>
-                  {data.map((log, index) => {
+                  {collaborator.map((log, index) => {
                     return (
                       <tr key={index}>
                         <td>
-                          <span
-                            className={`log-indicator align-middle ${log.color}`}
-                          />
+                          <span className='log-indicator align-middle border-theme-2' />
                         </td>
                         <td>
-                          <span className="font-weight-medium">
-                            {log.label}
+                          <span className='font-weight-medium mr-5'>
+                            {log.name}
                           </span>
+                          <span className='text-muted'>{log.email}</span>
                         </td>
-                        <td className="text-right">
-                          <span className="text-muted">{log.time}</span>
+                        <td className='text-right'>
+                          <span className='text-muted'>Editar</span>
                         </td>
                       </tr>
                     );
