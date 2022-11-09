@@ -10,8 +10,10 @@ import { getDate, getMonth, getYear } from 'date-fns';
 import data, { membership } from 'data/iconCards';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
+import Logs from 'containers/dashboards/Logs';
 import clienteAxios from '../../config/axios';
 import FormAuth from './detail/components/Proceso/FormAuth';
+import FormAsistant from './detail/components/Proceso/FormAsistant';
 
 const BlankPage = ({ match, authUser }) => {
   const [count, setCount] = useState({});
@@ -19,6 +21,7 @@ const BlankPage = ({ match, authUser }) => {
   const [payment, setPayment] = useState({});
   const [urlPago, setUrlPago] = useState('');
   const [approved, setApproved] = useState(false);
+  const [collaborator, setCollaborator] = useState([]);
 
   const { currentUser } = authUser;
   const { _id } = lawyer;
@@ -52,6 +55,15 @@ const BlankPage = ({ match, authUser }) => {
         console.log(error);
       }
     };
+
+    const getCollaborator = async () => {
+      const dataCollaborator = await clienteAxios.get(
+        '/collaborator/all/bylawyer'
+      );
+      setCollaborator(dataCollaborator.data);
+    };
+
+    getCollaborator();
 
     getPayment();
     getLawyer();
@@ -90,7 +102,7 @@ const BlankPage = ({ match, authUser }) => {
         }
       ],
       back_urls: {
-        success: 'https://solutioprocess.netlify.app/app/blank-page/',
+        success: 'localhost:3000/app/blank-page/',
         failure: '/failure',
         pending: '/pending'
       },
@@ -198,19 +210,37 @@ const BlankPage = ({ match, authUser }) => {
           )}
         </Colxx>
       </Row>
+      {currentUser.rol !== 'Read' && (
+        <>
+          <Row className='mt-4'>
+            <Colxx>
+              <h1>Colaboradores</h1>
+            </Colxx>
+          </Row>
+          <Row>
+            <Colxx className='mb-1'>
+              <FormAsistant
+                lawyer={lawyer}
+                setCollaborator={setCollaborator}
+                collaborator={collaborator}
+              />
+            </Colxx>
 
-      <Row className='mt-4'>
-        <h1 style={{ paddingLeft: '15px' }}>Colaboradores</h1>
-      </Row>
-      <Row className='mt-4'>
-        <Colxx xxs='12' className='mb-1'>
-          <h1 style={{ paddingLeft: '15px' }}>Datos de cuenta</h1>
+            <Colxx>
+              <Logs collaborator={collaborator} />
+            </Colxx>
+          </Row>{' '}
+          <Row className='mt-4'>
+            <Colxx xxs='12' className='mb-1'>
+              <h1>Datos de cuenta</h1>
 
-          <div>
-            <FormAuth lawyer={lawyer} />
-          </div>
-        </Colxx>
-      </Row>
+              <div>
+                <FormAuth lawyer={lawyer} />
+              </div>
+            </Colxx>
+          </Row>{' '}
+        </>
+      )}
     </>
   );
 };
