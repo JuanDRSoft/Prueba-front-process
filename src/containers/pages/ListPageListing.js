@@ -87,6 +87,7 @@ const ListPageListing = ({
             isSelect={selectedItems.includes(product.filingNumber)}
             onCheckItem={onCheckItem}
             collect={collect}
+            authUser={authUser}
           />
         );
       })}

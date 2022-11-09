@@ -9,10 +9,10 @@ import {
   DropdownItem,
   DropdownToggle,
   CustomInput,
-  Collapse
+  Collapse,
+  Badge
 } from 'reactstrap';
 import { injectIntl } from 'react-intl';
-
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import Breadcrumb from '../navs/Breadcrumb';
@@ -39,11 +39,14 @@ const ListPageHeading = ({
   pageSizes,
   toggleModal,
   heading,
-  selectedFilterOption
+  selectedFilterOption,
+  authUser
 }) => {
   const [dropdownSplitOpen, setDropdownSplitOpen] = useState(false);
   const [displayOptionsIsOpen, setDisplayOptionsIsOpen] = useState(false);
   const { messages } = intl;
+
+  const { currentUser } = authUser;
 
   return (
     <Row>
@@ -54,52 +57,55 @@ const ListPageHeading = ({
           </h1>
 
           <div className='text-zero top-right-button-container'>
-            <Button
-              color='primary'
-              size='lg'
-              className='top-right-button'
-              onClick={() => toggleModal()}
-            >
-              <IntlMessages id='home.add.process' />
-            </Button>
-            {'  '}
-            <ButtonDropdown
-              isOpen={dropdownSplitOpen}
-              toggle={() => setDropdownSplitOpen(!dropdownSplitOpen)}
-            >
-              <div className='btn btn-primary btn-lg pl-4 pr-0 check-button check-all'>
-                <CustomInput
-                  className='custom-checkbox mb-0 d-inline-block'
-                  type='checkbox'
-                  id='checkAll'
-                  checked={selectedItemsLength >= itemsLength}
-                  onChange={() => handleChangeSelectAll(true)}
-                  label={
-                    <span
-                      className={`custom-control-label ${
-                        selectedItemsLength > 0 &&
-                        selectedItemsLength < itemsLength
-                          ? 'indeterminate'
-                          : ''
-                      }`}
+            {currentUser.rol !== 'Read' && (
+              <>
+                <Button
+                  color='primary'
+                  size='lg'
+                  className='top-right-button'
+                  onClick={() => toggleModal()}
+                >
+                  <IntlMessages id='home.add.process' />
+                </Button>
+                <ButtonDropdown
+                  isOpen={dropdownSplitOpen}
+                  toggle={() => setDropdownSplitOpen(!dropdownSplitOpen)}
+                >
+                  <div className='btn btn-primary btn-lg pl-4 pr-0 check-button check-all'>
+                    <CustomInput
+                      className='custom-checkbox mb-0 d-inline-block'
+                      type='checkbox'
+                      id='checkAll'
+                      checked={selectedItemsLength >= itemsLength}
+                      onChange={() => handleChangeSelectAll(true)}
+                      label={
+                        <span
+                          className={`custom-control-label ${
+                            selectedItemsLength > 0 &&
+                            selectedItemsLength < itemsLength
+                              ? 'indeterminate'
+                              : ''
+                          }`}
+                        />
+                      }
                     />
-                  }
-                />
-              </div>
-              <DropdownToggle
-                caret
-                color='primary'
-                className='dropdown-toggle-split btn-lg'
-              />
-              <DropdownMenu right>
-                <DropdownItem>
-                  <IntlMessages id='pages.delete' />
-                </DropdownItem>
-                {/*  <DropdownItem>
+                  </div>
+                  <DropdownToggle
+                    caret
+                    color='primary'
+                    className='dropdown-toggle-split btn-lg'
+                  />
+                  <DropdownMenu right>
+                    <DropdownItem>
+                      <IntlMessages id='pages.delete' />
+                    </DropdownItem>
+                    {/*  <DropdownItem>
                   <IntlMessages id='pages.another-action' />
                 </DropdownItem> */}
-              </DropdownMenu>
-            </ButtonDropdown>
+                  </DropdownMenu>
+                </ButtonDropdown>{' '}
+              </>
+            )}
           </div>
           <Breadcrumb match={match} />
         </div>
@@ -156,7 +162,7 @@ const ListPageHeading = ({
                   })}
                 </DropdownMenu>
               </UncontrolledDropdown>
-              <div className='search-sm d-inline-block float-md-left mr-1 mb-1 align-top'>
+              <div className='search-sm d-inline-block float-md-left mr-5 mb-1 align-top'>
                 <input
                   type='text'
                   name='keyword'
@@ -165,6 +171,12 @@ const ListPageHeading = ({
                   onKeyPress={(e) => onSearchKey(e)}
                 />
               </div>
+
+              {currentUser.rol === 'Read' && (
+                <Badge color='primary' pill className='ml-2 mr-1'>
+                  MODO COLABORADOR
+                </Badge>
+              )}
             </div>
             <div className='float-md-right pt-1'>
               <span className='text-muted text-small mr-1'>
