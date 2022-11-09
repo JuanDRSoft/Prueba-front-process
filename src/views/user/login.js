@@ -43,6 +43,47 @@ const Login = ({ loading }) => {
     setEmail(correo);
   }, [email]);
 
+  const onCollaboratorLogin = async () => {
+    validateEmail(email);
+    validatePassword(uid);
+
+    if (email !== '' && uid !== '') {
+      // loginUserAction({ email, password }, history);
+
+      try {
+        const data = await axios.post(`${uri}/collaborator/find/email`, {
+          email,
+          uid
+        });
+
+        const { name, lawyer, role } = data.data;
+
+        localStorage.setItem('token', lawyer);
+
+        const item = {
+          title: name,
+          id: lawyer,
+          uid: data.data.uid,
+          rol: role,
+          ...currentUser
+        };
+        setCurrentUser(item);
+        console.log(data);
+
+        window.location.href = '/app';
+      } catch (err) {
+        NotificationManager.warning(
+          'el usuario no existe o sus credenciales son incorrectas',
+          'Login Error',
+          3000,
+          null,
+          null,
+          ''
+        );
+      }
+    }
+  };
+
   const onUserLogin = async () => {
     validateEmail(email);
     validatePassword(uid);
@@ -71,17 +112,11 @@ const Login = ({ loading }) => {
 
         window.location.href = '/app';
       } catch (error) {
-        NotificationManager.warning(
-          'el usuario no existe o sus credenciales son incorrectas',
-          'Login Error',
-          3000,
-          null,
-          null,
-          ''
-        );
+        onCollaboratorLogin();
       }
     }
   };
+
   const initialValues = { email, uid };
 
   return (
