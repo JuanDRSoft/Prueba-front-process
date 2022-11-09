@@ -226,6 +226,7 @@ const DataListPages = ({ match, authUser }) => {
           filterOptions={filterOptions}
           pageSizes={pageSizes}
           toggleModal={() => setModalOpen(!modalOpen)}
+          authUser={authUser}
         />
         <AddNewModal
           modalOpen={modalOpen}
