@@ -66,6 +66,25 @@ const FormAsistant = ({ lawyer, setCollaborator, collaborator, edit }) => {
     setName('');
     setEmail('');
     setUid('');
+    setId(false);
+  };
+
+  const onDelete = async () => {
+    // eslint-disable-next-line no-underscore-dangle
+    const data = await clienteAxios.delete(`/collaborator/${edit._id}`);
+
+    const dataUpdate = collaborator.filter(
+      (e) =>
+        // eslint-disable-next-line no-underscore-dangle
+        e._id !== edit._id
+    );
+    setCollaborator(dataUpdate);
+    console.log(data);
+
+    setName('');
+    setEmail('');
+    setUid('');
+    setId(false);
   };
 
   return (
@@ -100,7 +119,6 @@ const FormAsistant = ({ lawyer, setCollaborator, collaborator, edit }) => {
                         </div>
                       )}
                     </FormGroup>
-
                     <FormGroup>
                       <Label>Email</Label>
                       <Field
@@ -115,7 +133,6 @@ const FormAsistant = ({ lawyer, setCollaborator, collaborator, edit }) => {
                         </div>
                       )}
                     </FormGroup>
-
                     <FormGroup>
                       <Label>Contraseña</Label>
                       <Field
@@ -133,6 +150,17 @@ const FormAsistant = ({ lawyer, setCollaborator, collaborator, edit }) => {
                     <Button color='primary' block type='submit'>
                       {id ? 'Editar Colaborador' : 'Agregar Colaborador'}
                     </Button>
+
+                    {id && (
+                      <Button
+                        color='danger'
+                        block
+                        type='button'
+                        onClick={onDelete}
+                      >
+                        Eliminar Colaborador
+                      </Button>
+                    )}
                   </Form>
                 )}
               </Formik>
