@@ -1,7 +1,7 @@
 import { Colxx } from 'components/common/CustomBootstrap';
 import clienteAxios from 'config/axios';
 import { Field, Formik } from 'formik';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -12,12 +12,23 @@ import {
   Row
 } from 'reactstrap';
 
-const FormAsistant = ({ lawyer, setCollaborator, collaborator }) => {
+const FormAsistant = ({ lawyer, setCollaborator, collaborator, edit }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [uid, setUid] = useState('');
+  const [id, setId] = useState(false);
 
   const { _id } = lawyer;
+
+  useEffect(() => {
+    // eslint-disable-next-line no-underscore-dangle
+    if (edit._id) {
+      setName(edit.name);
+      setEmail(edit.email);
+      setUid(edit.uid);
+      setId(true);
+    }
+  }, [edit]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -26,14 +37,32 @@ const FormAsistant = ({ lawyer, setCollaborator, collaborator }) => {
       return;
     }
 
-    const data = await clienteAxios.post(`/collaborator`, {
-      name,
-      email,
-      lawyer: _id,
-      uid
-    });
+    if (id) {
+      // eslint-disable-next-line no-underscore-dangle
+      const data = await clienteAxios.put(`/collaborator/${edit._id}`, {
+        name,
+        email,
+        lawyer: _id,
+        uid
+      });
 
-    setCollaborator([data.data, ...collaborator]);
+      const dataUpdate = collaborator.map((ev) =>
+        // eslint-disable-next-line no-underscore-dangle
+        ev._id === edit._id ? data.data : ev
+      );
+      setCollaborator(dataUpdate);
+      console.log(data.data);
+    } else {
+      const data = await clienteAxios.post(`/collaborator`, {
+        name,
+        email,
+        lawyer: _id,
+        uid
+      });
+
+      setCollaborator([data.data, ...collaborator]);
+    }
+
     setName('');
     setEmail('');
     setUid('');
@@ -101,9 +130,8 @@ const FormAsistant = ({ lawyer, setCollaborator, collaborator }) => {
                         </div>
                       )}
                     </FormGroup>
-
                     <Button color='primary' block type='submit'>
-                      Agregar Colaborador
+                      {id ? 'Editar Colaborador' : 'Agregar Colaborador'}
                     </Button>
                   </Form>
                 )}
