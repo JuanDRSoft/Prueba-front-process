@@ -5,7 +5,7 @@ import { Card, CardBody, CardTitle } from 'reactstrap';
 
 import IntlMessages from 'helpers/IntlMessages';
 
-const Logs = ({ collaborator }) => {
+const Logs = ({ collaborator, getCollaboratorEdit }) => {
   return (
     <div>
       <Card>
@@ -32,7 +32,15 @@ const Logs = ({ collaborator }) => {
                           <span className='text-muted'>{log.email}</span>
                         </td>
                         <td className='text-right'>
-                          <span className='text-muted'>Editar</span>
+                          <button
+                            type='button'
+                            className='btn btn-link'
+                            style={{ marginTop: -10 }}
+                            // eslint-disable-next-line no-underscore-dangle
+                            onClick={() => getCollaboratorEdit(log._id)}
+                          >
+                            Editar
+                          </button>
                         </td>
                       </tr>
                     );
