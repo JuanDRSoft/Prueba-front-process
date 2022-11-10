@@ -31,7 +31,9 @@ const ListPageListing = ({
     const getPayment = async () => {
       try {
         const paymentData = await clienteAxios.get(
-          `/payments/lawyer/${currentUser.id}`
+          `/payments/lawyer/${
+            currentUser.admin ? currentUser.admin : currentUser.id
+          }`
         );
 
         const countPayment = paymentData.data.length - 1;

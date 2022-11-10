@@ -6,13 +6,7 @@ import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from 'components/common/CustomBootstrap';
 import alert from '../../assets/notification/alert.png';
 
-const DataListView = ({
-  proceso,
-  isSelect,
-  collect,
-  onCheckItem,
-  authUser
-}) => {
+const DataListView = ({ proceso, isSelect, collect, onCheckItem }) => {
   const {
     filingNumber,
     despacho,
@@ -24,11 +18,10 @@ const DataListView = ({
     _id
   } = proceso;
 
-  const { currentUser } = authUser;
   return (
     <Colxx xxs='12' className='mb-3'>
       <ContextMenuTrigger
-        id={currentUser.rol !== 'Read' && 'menu_id'}
+        id='menu_id'
         data={{ data: [{ filingNumber, id: _id }] }}
         collect={collect}
       >

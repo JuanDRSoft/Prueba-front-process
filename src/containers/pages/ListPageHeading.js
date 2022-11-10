@@ -57,55 +57,51 @@ const ListPageHeading = ({
           </h1>
 
           <div className='text-zero top-right-button-container'>
-            {currentUser.rol !== 'Read' && (
-              <>
-                <Button
-                  color='primary'
-                  size='lg'
-                  className='top-right-button'
-                  onClick={() => toggleModal()}
-                >
-                  <IntlMessages id='home.add.process' />
-                </Button>
-                <ButtonDropdown
-                  isOpen={dropdownSplitOpen}
-                  toggle={() => setDropdownSplitOpen(!dropdownSplitOpen)}
-                >
-                  <div className='btn btn-primary btn-lg pl-4 pr-0 check-button check-all'>
-                    <CustomInput
-                      className='custom-checkbox mb-0 d-inline-block'
-                      type='checkbox'
-                      id='checkAll'
-                      checked={selectedItemsLength >= itemsLength}
-                      onChange={() => handleChangeSelectAll(true)}
-                      label={
-                        <span
-                          className={`custom-control-label ${
-                            selectedItemsLength > 0 &&
-                            selectedItemsLength < itemsLength
-                              ? 'indeterminate'
-                              : ''
-                          }`}
-                        />
-                      }
+            <Button
+              color='primary'
+              size='lg'
+              className='top-right-button'
+              onClick={() => toggleModal()}
+            >
+              <IntlMessages id='home.add.process' />
+            </Button>
+            <ButtonDropdown
+              isOpen={dropdownSplitOpen}
+              toggle={() => setDropdownSplitOpen(!dropdownSplitOpen)}
+            >
+              <div className='btn btn-primary btn-lg pl-4 pr-0 check-button check-all'>
+                <CustomInput
+                  className='custom-checkbox mb-0 d-inline-block'
+                  type='checkbox'
+                  id='checkAll'
+                  checked={selectedItemsLength >= itemsLength}
+                  onChange={() => handleChangeSelectAll(true)}
+                  label={
+                    <span
+                      className={`custom-control-label ${
+                        selectedItemsLength > 0 &&
+                        selectedItemsLength < itemsLength
+                          ? 'indeterminate'
+                          : ''
+                      }`}
                     />
-                  </div>
-                  <DropdownToggle
-                    caret
-                    color='primary'
-                    className='dropdown-toggle-split btn-lg'
-                  />
-                  <DropdownMenu right>
-                    <DropdownItem>
-                      <IntlMessages id='pages.delete' />
-                    </DropdownItem>
-                    {/*  <DropdownItem>
+                  }
+                />
+              </div>
+              <DropdownToggle
+                caret
+                color='primary'
+                className='dropdown-toggle-split btn-lg'
+              />
+              <DropdownMenu right>
+                <DropdownItem>
+                  <IntlMessages id='pages.delete' />
+                </DropdownItem>
+                {/*  <DropdownItem>
                   <IntlMessages id='pages.another-action' />
                 </DropdownItem> */}
-                  </DropdownMenu>
-                </ButtonDropdown>{' '}
-              </>
-            )}
+              </DropdownMenu>
+            </ButtonDropdown>{' '}
           </div>
           <Breadcrumb match={match} />
         </div>
