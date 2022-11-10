@@ -22,6 +22,7 @@ const BlankPage = ({ match, authUser }) => {
   const [urlPago, setUrlPago] = useState('');
   const [approved, setApproved] = useState(false);
   const [collaborator, setCollaborator] = useState([]);
+  const [edit, setEdit] = useState({});
 
   const { currentUser } = authUser;
   const { _id } = lawyer;
@@ -75,6 +76,17 @@ const BlankPage = ({ match, authUser }) => {
     return price;
   };
 
+  const getCollaboratorEdit = async (id) => {
+    try {
+      // eslint-disable-next-line no-underscore-dangle
+      const collab = await clienteAxios.get(`/collaborator/${id}`);
+      console.log(collab.data);
+      setEdit(collab.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const formatDate = () => {
     const fecha = Date.parse(endDate);
 
@@ -102,7 +114,7 @@ const BlankPage = ({ match, authUser }) => {
         }
       ],
       back_urls: {
-        success: 'https://solutioprocess.netlify.app/app/blank-page/',
+        success: 'localhost:3000/app/blank-page/',
         failure: '/failure',
         pending: '/pending'
       },
@@ -223,11 +235,16 @@ const BlankPage = ({ match, authUser }) => {
                 lawyer={lawyer}
                 setCollaborator={setCollaborator}
                 collaborator={collaborator}
+                edit={edit}
               />
             </Colxx>
 
             <Colxx>
-              <Logs collaborator={collaborator} />
+              <Logs
+                collaborator={collaborator}
+                getCollaboratorEdit={getCollaboratorEdit}
+                edit={edit}
+              />
             </Colxx>
           </Row>{' '}
           <Row className='mt-4'>
