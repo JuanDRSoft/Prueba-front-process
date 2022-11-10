@@ -35,14 +35,22 @@ const BlankPage = ({ match, authUser }) => {
     };
 
     const getLawyer = async () => {
-      const lawyerData = await clienteAxios.get(`/lawyer/${currentUser.id}`);
+      const lawyerData = await clienteAxios.get(
+        `${
+          currentUser.admin
+            ? `/collaborator/${currentUser.id}`
+            : `/lawyer/${currentUser.id}`
+        }`
+      );
       setLawyer(lawyerData.data);
     };
 
     const getPayment = async () => {
       try {
         const paymentData = await clienteAxios.get(
-          `/payments/lawyer/${currentUser.id}`
+          `/payments/lawyer/${
+            currentUser.admin ? currentUser.admin : currentUser.id
+          }`
         );
 
         const countPayment = paymentData.data.length - 1;
@@ -67,7 +75,9 @@ const BlankPage = ({ match, authUser }) => {
     getCollaborator();
 
     getPayment();
-    getLawyer();
+    if (!currentUser.admin) {
+      getLawyer();
+    }
     getCount();
   }, []);
 
@@ -103,7 +113,7 @@ const BlankPage = ({ match, authUser }) => {
       payer: { email: 'test_user_67773890@testuser.com' },
       items: [
         {
-          id: `${_id}`,
+          id: `${currentUser.admin ? currentUser.admin : _id}`,
           title: 'Subscripción',
           currency_id: 'COP',
           description: 'pago de su factura mensual',
