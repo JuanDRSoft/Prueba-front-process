@@ -56,15 +56,16 @@ const Login = ({ loading }) => {
           uid
         });
 
-        const { name, lawyer, role } = data.data;
+        const { name, _id, role, lawyer } = data.data;
 
-        localStorage.setItem('token', lawyer);
+        localStorage.setItem('token', _id);
 
         const item = {
           title: name,
-          id: lawyer,
+          id: _id,
           uid: data.data.uid,
           rol: role,
+          admin: lawyer,
           ...currentUser
         };
         setCurrentUser(item);
