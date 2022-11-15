@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import {
   Row,
   Button,
-  ButtonDropdown,
+  // ButtonDropdown,
   UncontrolledDropdown,
   DropdownMenu,
   DropdownItem,
   DropdownToggle,
-  CustomInput,
+  // CustomInput,
   Collapse,
   Badge
 } from 'reactstrap';
@@ -21,28 +21,28 @@ const ListPageHeading = ({
   intl,
   /* displayMode,
   changeDisplayMode, */
-  handleChangeSelectAll,
+  // handleChangeSelectAll,
   changeOrderBy,
   changeFilterBy,
-  changePageSize,
-  selectedPageSize,
-  totalItemCount,
+  // changePageSize,
+  // selectedPageSize,
+  // totalItemCount,
   selectedOrderOption,
   match,
-  startIndex,
-  endIndex,
-  selectedItemsLength,
-  itemsLength,
+  // startIndex,
+  // endIndex,
+  // selectedItemsLength,
+  // itemsLength,
   onSearchKey,
   orderOptions,
   filterOptions,
-  pageSizes,
+  // pageSizes,
   toggleModal,
   heading,
   selectedFilterOption,
   authUser
 }) => {
-  const [dropdownSplitOpen, setDropdownSplitOpen] = useState(false);
+  // const [dropdownSplitOpen, setDropdownSplitOpen] = useState(false);
   const [displayOptionsIsOpen, setDisplayOptionsIsOpen] = useState(false);
   const { messages } = intl;
 
@@ -65,7 +65,7 @@ const ListPageHeading = ({
             >
               <IntlMessages id='home.add.process' />
             </Button>
-            <ButtonDropdown
+            {/* <ButtonDropdown
               isOpen={dropdownSplitOpen}
               toggle={() => setDropdownSplitOpen(!dropdownSplitOpen)}
             >
@@ -96,12 +96,12 @@ const ListPageHeading = ({
               <DropdownMenu right>
                 <DropdownItem>
                   <IntlMessages id='pages.delete' />
-                </DropdownItem>
-                {/*  <DropdownItem>
+                </DropdownItem> */}
+            {/*  <DropdownItem>
                   <IntlMessages id='pages.another-action' />
                 </DropdownItem> */}
-              </DropdownMenu>
-            </ButtonDropdown>{' '}
+            {/* </DropdownMenu>
+            </ButtonDropdown> */}
           </div>
           <Breadcrumb match={match} />
         </div>
@@ -174,7 +174,7 @@ const ListPageHeading = ({
                 </Badge>
               )}
             </div>
-            <div className='float-md-right pt-1'>
+            {/* <div className='float-md-right pt-1'>
               <span className='text-muted text-small mr-1'>
                 <IntlMessages id='pages.viewing' />
                 {startIndex + 1}-
@@ -200,7 +200,7 @@ const ListPageHeading = ({
                   })}
                 </DropdownMenu>
               </UncontrolledDropdown>
-            </div>
+            </div> */}
           </Collapse>
         </div>
         <Separator className='mb-5' />
