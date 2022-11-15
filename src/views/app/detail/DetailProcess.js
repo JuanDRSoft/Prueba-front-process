@@ -185,7 +185,7 @@ const DetailProcess = ({ match, authUser }) => {
           </Colxx>
 
           <Colxx>
-            <Card style={{ marginTop: 10 }}>
+            <Card>
               <CardBody>
                 <CardTitle style={{ fontWeight: 'bold' }}>
                   ACTUACIONES DEL PROCESO - Cantidad {cantidad}
