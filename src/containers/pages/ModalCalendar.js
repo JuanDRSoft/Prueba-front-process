@@ -27,7 +27,8 @@ const filterOptions = [
   { column: 'mañana', label: 'Mañana' },
   { column: 'mes', label: 'Este mes' },
   { column: 'año', label: 'Este Año' },
-  { column: 'otra', label: 'Fecha especifica' }
+  { column: 'otra', label: 'Fecha especifica' },
+  { column: 'colaborador', label: 'Colaborador' }
 ];
 
 const filterType = [
@@ -51,9 +52,15 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
     column: '',
     label: 'Cualquiera'
   });
+  const [selectCollaborator, setSelectCollaborator] = useState({
+    column: '',
+    name: 'Selecciona'
+  });
   const [selectDate, setSelectDate] = useState('');
   const [items, setItems] = useState([]);
   const [process, setProcess] = useState([]);
+  const [collaborators, setCollaborators] = useState([]);
+  const [eventCollaborator, setEventCollaborator] = useState([]);
 
   useEffect(() => {
     const getAllData = async () => {
@@ -66,10 +73,29 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
       setProcess(countDataAll.data);
     };
 
+    const getCollaborator = async () => {
+      const dataCollaborator = await clienteAxios.get(
+        '/collaborator/all/bylawyer'
+      );
+      setCollaborators(dataCollaborator.data);
+    };
+
+    getCollaborator();
     getAllData();
     getAllProcess();
   }, []);
 
+  useEffect(() => {
+    const getEventCollaborator = async () => {
+      const dataEvent = await clienteAxios.get(
+        // eslint-disable-next-line no-underscore-dangle
+        `/event/all/byCollaborator/${selectCollaborator._id}`
+      );
+      setEventCollaborator(dataEvent.data);
+    };
+    getEventCollaborator();
+  }, [selectCollaborator]);
+  console.log(eventCollaborator);
   useEffect(() => {
     if (selectedFilterOption.column === '') {
       const activos = events.filter(
@@ -175,6 +201,34 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
     );
   };
 
+  const ActiveEventsCollaborator = () => {
+    return eventCollaborator.length > 0 ? (
+      eventCollaborator
+        .sort(function (a, b) {
+          if (a.start > b.start) {
+            return 1;
+          }
+          if (a.start < b.start) {
+            return -1;
+          }
+          return 1;
+        })
+        .map((event) => (
+          <PreviewEventos
+            event={event}
+            key={event}
+            setEvents={setEvents}
+            events={events}
+            process={process}
+          />
+        ))
+    ) : (
+      <p style={{ textAlign: 'center', marginTop: 10 }}>
+        NO HAY EVENTOS ACTIVOS
+      </p>
+    );
+  };
+
   return (
     <Modal
       isOpen={modalOpen}
@@ -199,7 +253,7 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
           <Colxx className='d-block d-md-inline-block pt-1'>
             <UncontrolledDropdown className='mr-1 float-md-right btn-group'>
               <DropdownToggle caret color='outline-dark' size='xs'>
-                <IntlMessages id='Filtrar por fecha: ' />
+                <IntlMessages id='Filtrar por: ' />
                 {selectedFilterOption.label}
               </DropdownToggle>
               <DropdownMenu>
@@ -214,6 +268,10 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
                         setSelectedFilterType({
                           column: '',
                           label: 'Cualquiera'
+                        });
+                        setSelectCollaborator({
+                          column: '',
+                          name: 'Selecciona'
                         });
                       }}
                     >
@@ -239,6 +297,14 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
                           setSelectedFilterType(
                             filterType.find((x) => x.column === order.column)
                           );
+                          setSelectedFilterOption({
+                            column: '',
+                            label: 'Activos'
+                          });
+                          setSelectCollaborator({
+                            column: '',
+                            name: 'Selecciona'
+                          });
                         }}
                       >
                         {order.label}
@@ -254,7 +320,7 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
                   value={selectDate}
                   onChange={(e) => setSelectDate(e.target.value)}
                   style={{
-                    width: 220,
+                    width: 190,
                     height: 30,
                     borderRadius: 50,
                     float: 'right',
@@ -262,11 +328,46 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
                   }}
                 />
               )}
+
+              {selectedFilterOption.column === 'colaborador' && (
+                <UncontrolledDropdown
+                  className='ml-6'
+                  style={{
+                    height: 30,
+                    borderRadius: 50,
+                    float: 'right',
+                    marginTop: 10
+                  }}
+                >
+                  <DropdownToggle caret color='outline-dark' size='xs'>
+                    <IntlMessages id='Colaborador: ' />
+                    {selectCollaborator.name}
+                  </DropdownToggle>
+                  <DropdownMenu>
+                    {collaborators.map((order, index) => {
+                      return (
+                        <DropdownItem
+                          key={index.label}
+                          onClick={() => {
+                            setSelectCollaborator(
+                              collaborators.find((x) => x.name === order.name)
+                            );
+                          }}
+                        >
+                          {order.name}
+                        </DropdownItem>
+                      );
+                    })}
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              )}
             </div>
           </Colxx>
         </Row>
 
-        {ActiveEvents()}
+        {selectedFilterOption.column === 'colaborador'
+          ? ActiveEventsCollaborator()
+          : ActiveEvents()}
       </ModalBody>
       <ModalFooter>
         <Button color='secondary' outline onClick={handleOpenModal}>
