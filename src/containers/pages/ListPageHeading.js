@@ -57,14 +57,16 @@ const ListPageHeading = ({
           </h1>
 
           <div className='text-zero top-right-button-container'>
-            <Button
-              color='primary'
-              size='lg'
-              className='top-right-button'
-              onClick={() => toggleModal()}
-            >
-              <IntlMessages id='home.add.process' />
-            </Button>
+            {currentUser.ruleProcess && (
+              <Button
+                color='primary'
+                size='lg'
+                className='top-right-button'
+                onClick={() => toggleModal()}
+              >
+                <IntlMessages id='home.add.process' />
+              </Button>
+            )}
             {/* <ButtonDropdown
               isOpen={dropdownSplitOpen}
               toggle={() => setDropdownSplitOpen(!dropdownSplitOpen)}
