@@ -56,7 +56,8 @@ const Login = ({ loading }) => {
           uid
         });
 
-        const { name, _id, role, lawyer } = data.data;
+        const { name, _id, role, lawyer, process, events, membership } =
+          data.data;
 
         localStorage.setItem('token', _id);
 
@@ -66,6 +67,9 @@ const Login = ({ loading }) => {
           uid: data.data.uid,
           rol: role,
           admin: lawyer,
+          ruleProcess: process,
+          ruleEvents: events,
+          ruleMembership: membership,
           ...currentUser
         };
         setCurrentUser(item);
@@ -106,6 +110,9 @@ const Login = ({ loading }) => {
           title: name,
           id: _id,
           uid: data.data.uid,
+          ruleProcess: true,
+          ruleEvents: true,
+          ruleMembership: true,
           ...currentUser
         };
         setCurrentUser(item);
