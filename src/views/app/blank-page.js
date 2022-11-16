@@ -14,6 +14,7 @@ import Logs from 'containers/dashboards/Logs';
 import clienteAxios from '../../config/axios';
 import FormAuth from './detail/components/Proceso/FormAuth';
 import FormAsistant from './detail/components/Proceso/FormAsistant';
+import FormRules from './detail/components/Proceso/FormRules';
 
 const BlankPage = ({ match, authUser }) => {
   const [count, setCount] = useState({});
@@ -23,6 +24,7 @@ const BlankPage = ({ match, authUser }) => {
   const [approved, setApproved] = useState(false);
   const [collaborator, setCollaborator] = useState([]);
   const [edit, setEdit] = useState({});
+  const [form, setForm] = useState(false);
 
   const { currentUser } = authUser;
   const { _id } = lawyer;
@@ -87,6 +89,7 @@ const BlankPage = ({ match, authUser }) => {
   };
 
   const getCollaboratorEdit = async (id) => {
+    setForm(false);
     try {
       // eslint-disable-next-line no-underscore-dangle
       const collab = await clienteAxios.get(`/collaborator/${id}`);
@@ -104,6 +107,18 @@ const BlankPage = ({ match, authUser }) => {
       ${getDate(fecha)}-${Number(getMonth(fecha)) + 1 > 9 ? '' : '0'}${
       Number(getMonth(fecha)) + 1
     }-${getYear(fecha)}`;
+  };
+
+  const getRules = async (id) => {
+    setForm(true);
+    try {
+      // eslint-disable-next-line no-underscore-dangle
+      const collab = await clienteAxios.get(`/collaborator/${id}`);
+      console.log(collab.data);
+      setEdit(collab.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const paymentMethod = async () => {
@@ -204,34 +219,37 @@ const BlankPage = ({ match, authUser }) => {
           {count && fnData()}
         </Colxx>
       </Row>
-      <Row>
-        <Colxx xxs='12' className='mb-1'>
-          <h1>Membresía Y Facturación</h1>
+      {currentUser.ruleMembership && (
+        <Row>
+          <Colxx xxs='12' className='mb-1'>
+            <h1>Membresía Y Facturación</h1>
 
-          <div style={{ marginTop: 20 }}>{membershipData()}</div>
+            <div style={{ marginTop: 20 }}>{membershipData()}</div>
 
-          {approved ? null : (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginTop: 20
-              }}
-            >
-              <iframe
-                width='100%'
-                height='600'
-                style={{ border: 'none' }}
-                id='inlineFrameExample'
-                title='Inline Frame Example'
-                src={urlPago}
+            {approved ? null : (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  marginTop: 20
+                }}
               >
-                h
-              </iframe>
-            </div>
-          )}
-        </Colxx>
-      </Row>
+                <iframe
+                  width='100%'
+                  height='600'
+                  style={{ border: 'none' }}
+                  id='inlineFrameExample'
+                  title='Inline Frame Example'
+                  src={urlPago}
+                >
+                  h
+                </iframe>
+              </div>
+            )}
+          </Colxx>
+        </Row>
+      )}
+
       {currentUser.rol !== 'Read' && (
         <>
           <Row className='mt-4'>
@@ -241,12 +259,23 @@ const BlankPage = ({ match, authUser }) => {
           </Row>
           <Row>
             <Colxx className='mb-1'>
-              <FormAsistant
-                lawyer={lawyer}
-                setCollaborator={setCollaborator}
-                collaborator={collaborator}
-                edit={edit}
-              />
+              {form ? (
+                <FormRules
+                  lawyer={lawyer}
+                  setCollaborator={setCollaborator}
+                  collaborator={collaborator}
+                  edit={edit}
+                  setForm={setForm}
+                  setEdit={setEdit}
+                />
+              ) : (
+                <FormAsistant
+                  lawyer={lawyer}
+                  setCollaborator={setCollaborator}
+                  collaborator={collaborator}
+                  edit={edit}
+                />
+              )}
             </Colxx>
 
             <Colxx>
@@ -254,6 +283,7 @@ const BlankPage = ({ match, authUser }) => {
                 collaborator={collaborator}
                 getCollaboratorEdit={getCollaboratorEdit}
                 edit={edit}
+                getRules={getRules}
               />
             </Colxx>
           </Row>{' '}
