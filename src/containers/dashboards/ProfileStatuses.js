@@ -1,30 +1,30 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
-import { Card, CardBody, CardTitle, Progress } from 'reactstrap';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import { Card, CardBody, CardTitle } from 'reactstrap';
 
 import IntlMessages from 'helpers/IntlMessages';
-import data from 'data/profileStatuses';
+import PreviewStatus from './PreviewStatus';
 
-const ProfileStatuses = ({ cardClass = 'h-100' }) => {
+const ProfileStatuses = ({ collaborator, count }) => {
   return (
-    <Card className={cardClass}>
+    <Card>
       <CardBody>
         <CardTitle>
-          <IntlMessages id='dashboards.profile-status' />
+          <IntlMessages id='Procesos Colaboradores' />
         </CardTitle>
-        {data.map((s, index) => {
-          return (
-            <div key={index} className='mb-4'>
-              <p className='mb-2'>
-                {s.title}
-                <span className='float-right text-muted'>
-                  {s.status}/{s.total}
-                </span>
-              </p>
-              <Progress value={(s.status / s.total) * 100} />
-            </div>
-          );
-        })}
+
+        <div className='dashboard-logs'>
+          <PerfectScrollbar
+            options={{ suppressScrollX: true, wheelPropagation: false }}
+          >
+            {collaborator.map((collab, index) => {
+              return (
+                <PreviewStatus collab={collab} key={index} count={count} />
+              );
+            })}
+          </PerfectScrollbar>
+        </div>
       </CardBody>
     </Card>
   );
