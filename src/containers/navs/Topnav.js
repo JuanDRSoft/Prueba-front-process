@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-use-before-define */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { injectIntl } from 'react-intl';
 
 import {
@@ -30,6 +30,7 @@ import {
 import { MobileMenuIcon, MenuIcon } from 'components/svg';
 
 /* import TopnavEasyAccess from './Topnav.EasyAccess'; */
+import clienteAxios from 'config/axios';
 import TopnavNotifications from './Topnav.Notifications';
 import TopnavDarkSwitch from './Topnav.DarkSwitch';
 import TopNavCalendar from './Topnav.Calendar';
@@ -46,6 +47,37 @@ const TopNav = ({
   authUser
 }) => {
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [lawyer, setLawyer] = useState({});
+  const [evento, setEvento] = useState(true);
+
+  useEffect(() => {
+    const getLawyer = async () => {
+      const data = await clienteAxios.get(`/lawyer/${currentUser.id}`);
+      setLawyer(data.data);
+      setEvento(true);
+
+      console.log(evento);
+    };
+
+    getLawyer();
+  }, []);
+
+  useEffect(() => {
+    if (lawyer === null || lawyer === undefined) {
+      const getCollaborator = async () => {
+        try {
+          const data = await clienteAxios.get(
+            `/collaborator/${currentUser.id}`
+          );
+          setLawyer(data.data);
+          setEvento(data.data.events);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getCollaborator();
+    }
+  }, [lawyer]);
 
   const search = () => {
     history.push(`${searchPath}?key=${searchKeyword}`);
@@ -142,7 +174,7 @@ const TopNav = ({
       <div className='navbar-right'>
         {isDarkSwitchActive && <TopnavDarkSwitch />}
         <div className='header-icons d-inline-block align-middle'>
-          {currentUser.ruleEvents && <TopNavCalendar />}
+          {evento && <TopNavCalendar />}
           <TopnavNotifications />
         </div>
         <div className='user d-inline-block'>
