@@ -79,7 +79,7 @@ const FormRules = ({
                   <FormGroup style={{ display: 'flex', gap: 10 }}>
                     <Label>- Permitir la creación de eventos en agenda</Label>
                     <Switch
-                      className='custom-switch custom-switch-primary custom-switch-small'
+                      className='custom-switch custom-switch-primary custom-switch-small pr-4'
                       checked={checkedEvents}
                       onChange={(secondary) => setCheckedEvents(secondary)}
                     />
@@ -90,7 +90,7 @@ const FormRules = ({
                       - Permitir la visualización de datos de membresia
                     </Label>
                     <Switch
-                      className='custom-switch custom-switch-primary custom-switch-small'
+                      className='custom-switch custom-switch-primary custom-switch-small pr-4'
                       checked={checkedMembership}
                       onChange={(secondary) => setCheckedMembership(secondary)}
                     />
