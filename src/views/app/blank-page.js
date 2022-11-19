@@ -11,60 +11,47 @@ import data, { membership } from 'data/iconCards';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import Logs from 'containers/dashboards/Logs';
-import clienteAxios from '../../config/axios';
+import ProfileStatuses from 'containers/dashboards/ProfileStatuses';
 import FormAuth from './detail/components/Proceso/FormAuth';
 import FormAsistant from './detail/components/Proceso/FormAsistant';
 import FormRules from './detail/components/Proceso/FormRules';
+import clienteAxios from '../../config/axios';
 
 const BlankPage = ({ match, authUser }) => {
   const [count, setCount] = useState({});
   const [lawyer, setLawyer] = useState({});
+  const [collab, setCollab] = useState();
   const [payment, setPayment] = useState({});
   const [urlPago, setUrlPago] = useState('');
   const [approved, setApproved] = useState(false);
   const [collaborator, setCollaborator] = useState([]);
   const [edit, setEdit] = useState({});
   const [form, setForm] = useState(false);
+  const [member, setMember] = useState();
+  const [rol, setRol] = useState();
 
   const { currentUser } = authUser;
-  const { _id } = lawyer;
   const { endDate } = payment;
 
   useEffect(() => {
+    const getLawyer = async () => {
+      try {
+        const lawyerData = await clienteAxios.get(
+          `/collaborator/${currentUser.id}`
+        );
+        setLawyer(lawyerData.data);
+        setCollab(lawyerData.data);
+        setMember(lawyerData.data.membership);
+        setRol(lawyerData.data.role);
+      } catch (err) {
+        console.log(err);
+        console.log(rol);
+      }
+    };
+
     const getCount = async () => {
       const countData = await clienteAxios.get('/process/count/bylawyer');
       setCount(countData.data);
-    };
-
-    const getLawyer = async () => {
-      const lawyerData = await clienteAxios.get(
-        `${
-          currentUser.admin
-            ? `/collaborator/${currentUser.id}`
-            : `/lawyer/${currentUser.id}`
-        }`
-      );
-      setLawyer(lawyerData.data);
-    };
-
-    const getPayment = async () => {
-      try {
-        const paymentData = await clienteAxios.get(
-          `/payments/lawyer/${
-            currentUser.admin ? currentUser.admin : currentUser.id
-          }`
-        );
-
-        const countPayment = paymentData.data.length - 1;
-        console.log(paymentData.data[countPayment]);
-
-        if (paymentData.data[countPayment].status.includes('approved')) {
-          setApproved(true);
-          setPayment(paymentData.data[countPayment]);
-        }
-      } catch (error) {
-        console.log(error);
-      }
     };
 
     const getCollaborator = async () => {
@@ -74,14 +61,67 @@ const BlankPage = ({ match, authUser }) => {
       setCollaborator(dataCollaborator.data);
     };
 
+    getLawyer();
     getCollaborator();
-
-    getPayment();
-    if (!currentUser.admin) {
-      getLawyer();
-    }
     getCount();
   }, []);
+
+  useEffect(() => {
+    if (lawyer === null) {
+      const getLawyer = async () => {
+        try {
+          const lawyerData = await clienteAxios.get(
+            `/lawyer/${currentUser.id}`
+          );
+          setLawyer(lawyerData.data);
+          setMember(lawyerData.data.membership);
+          setRol(lawyerData.data.role);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      getLawyer();
+    }
+    if (collab !== null) {
+      const getPayment = async () => {
+        try {
+          const paymentData = await clienteAxios.get(
+            `/payments/lawyer/${lawyer.lawyer}`
+          );
+
+          const countPayment = paymentData.data.length - 1;
+          console.log(paymentData.data[countPayment]);
+
+          if (paymentData.data[countPayment].status.includes('approved')) {
+            setApproved(true);
+            setPayment(paymentData.data[countPayment]);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getPayment();
+    } else {
+      const getPayment = async () => {
+        try {
+          const paymentData = await clienteAxios.get(
+            `/payments/lawyer/${currentUser.id}`
+          );
+
+          const countPayment = paymentData.data.length - 1;
+          console.log(paymentData.data[countPayment]);
+
+          if (paymentData.data[countPayment].status.includes('approved')) {
+            setApproved(true);
+            setPayment(paymentData.data[countPayment]);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getPayment();
+    }
+  }, [lawyer, collab]);
 
   const invoice = () => {
     const price = count[1] * 500;
@@ -92,9 +132,9 @@ const BlankPage = ({ match, authUser }) => {
     setForm(false);
     try {
       // eslint-disable-next-line no-underscore-dangle
-      const collab = await clienteAxios.get(`/collaborator/${id}`);
-      console.log(collab.data);
-      setEdit(collab.data);
+      const collabData = await clienteAxios.get(`/collaborator/${id}`);
+
+      setEdit(collabData.data);
     } catch (error) {
       console.log(error);
     }
@@ -113,9 +153,9 @@ const BlankPage = ({ match, authUser }) => {
     setForm(true);
     try {
       // eslint-disable-next-line no-underscore-dangle
-      const collab = await clienteAxios.get(`/collaborator/${id}`);
-      console.log(collab.data);
-      setEdit(collab.data);
+      const collabData = await clienteAxios.get(`/collaborator/${id}`);
+      console.log(collabData.data);
+      setEdit(collabData.data);
     } catch (error) {
       console.log(error);
     }
@@ -128,7 +168,7 @@ const BlankPage = ({ match, authUser }) => {
       payer: { email: 'test_user_67773890@testuser.com' },
       items: [
         {
-          id: `${currentUser.admin ? currentUser.admin : _id}`,
+          id: lawyer.lawyer ? lawyer.lawyer : currentUser.id,
           title: 'Subscripción',
           currency_id: 'COP',
           description: 'pago de su factura mensual',
@@ -219,7 +259,7 @@ const BlankPage = ({ match, authUser }) => {
           {count && fnData()}
         </Colxx>
       </Row>
-      {currentUser.ruleMembership && (
+      {member && (
         <Row>
           <Colxx xxs='12' className='mb-1'>
             <h1>Membresía Y Facturación</h1>
@@ -250,7 +290,7 @@ const BlankPage = ({ match, authUser }) => {
         </Row>
       )}
 
-      {currentUser.rol !== 'Read' && (
+      {rol === 'Admin' ? (
         <>
           <Row className='mt-4'>
             <Colxx>
@@ -258,7 +298,7 @@ const BlankPage = ({ match, authUser }) => {
             </Colxx>
           </Row>
           <Row>
-            <Colxx className='mb-1'>
+            <Colxx xxs='3' className='mb-1'>
               {form ? (
                 <FormRules
                   lawyer={lawyer}
@@ -286,6 +326,10 @@ const BlankPage = ({ match, authUser }) => {
                 getRules={getRules}
               />
             </Colxx>
+
+            <Colxx xxs='3'>
+              <ProfileStatuses collaborator={collaborator} count={count} />
+            </Colxx>
           </Row>{' '}
           <Row className='mt-4'>
             <Colxx xxs='12' className='mb-1'>
@@ -297,7 +341,7 @@ const BlankPage = ({ match, authUser }) => {
             </Colxx>
           </Row>{' '}
         </>
-      )}
+      ) : null}
     </>
   );
 };
