@@ -59,7 +59,8 @@ const DataListPages = ({ match, authUser }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [items, setItems] = useState([]);
   const [lastChecked, setLastChecked] = useState(null);
-
+  const [lawyer, setLawyer] = useState({});
+  const [process, setProcess] = useState(true);
   const [reloadData, setReloadData] = useState(false);
 
   const { currentUser } = authUser;
@@ -68,6 +69,35 @@ const DataListPages = ({ match, authUser }) => {
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedPageSize, selectedOrderOption]);
+
+  useEffect(() => {
+    const getLawyer = async () => {
+      const data = await clienteAxios.get(`/lawyer/${currentUser.id}`);
+      setLawyer(data.data);
+      setProcess(true);
+
+      console.log(lawyer);
+    };
+
+    getLawyer();
+  }, []);
+
+  useEffect(() => {
+    if (lawyer === null || lawyer === undefined) {
+      const getCollaborator = async () => {
+        try {
+          const data = await clienteAxios.get(
+            `/collaborator/${currentUser.id}`
+          );
+          setLawyer(data.data);
+          setProcess(data.data.process);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getCollaborator();
+    }
+  }, [lawyer]);
 
   useEffect(() => {
     async function fetchData() {
@@ -227,6 +257,7 @@ const DataListPages = ({ match, authUser }) => {
           pageSizes={pageSizes}
           toggleModal={() => setModalOpen(!modalOpen)}
           authUser={authUser}
+          process={process}
         />
         <AddNewModal
           modalOpen={modalOpen}
