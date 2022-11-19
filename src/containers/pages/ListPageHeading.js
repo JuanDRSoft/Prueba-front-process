@@ -40,10 +40,12 @@ const ListPageHeading = ({
   toggleModal,
   heading,
   selectedFilterOption,
-  authUser
+  authUser,
+  process
 }) => {
   // const [dropdownSplitOpen, setDropdownSplitOpen] = useState(false);
   const [displayOptionsIsOpen, setDisplayOptionsIsOpen] = useState(false);
+
   const { messages } = intl;
 
   const { currentUser } = authUser;
@@ -57,7 +59,7 @@ const ListPageHeading = ({
           </h1>
 
           <div className='text-zero top-right-button-container'>
-            {currentUser.ruleProcess && (
+            {process && (
               <Button
                 color='primary'
                 size='lg'
