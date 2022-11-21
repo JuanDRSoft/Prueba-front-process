@@ -124,7 +124,7 @@ const BlankPage = ({ match, authUser }) => {
   }, [lawyer, collab]);
 
   const invoice = () => {
-    const price = count[1] * 500;
+    const price = count[0] * 500;
     return price;
   };
 
@@ -174,7 +174,7 @@ const BlankPage = ({ match, authUser }) => {
           description: 'pago de su factura mensual',
           picture_url: 'prueba',
           category_id: 'cat123',
-          quantity: count[1],
+          quantity: count[0],
           unit_price: 500
         }
       ],
