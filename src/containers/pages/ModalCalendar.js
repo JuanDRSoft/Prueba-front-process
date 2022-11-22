@@ -12,13 +12,13 @@ import {
   DropdownMenu,
   Input
 } from 'reactstrap';
+import clienteAxios from 'config/axios';
 import PreviewEventos from 'views/app/detail/components/eventos/PreviewEventos';
 import { Colxx } from 'components/common/CustomBootstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import CalendarCard from 'containers/dashboards/Calendar';
 import moment from 'moment';
 import { getYear } from 'date-fns';
-import clienteAxios from 'config/axios';
 import ModalEvent from './ModalEvent';
 
 const filterOptions = [
@@ -40,7 +40,7 @@ const filterType = [
   { column: 'Audiencias', label: 'Audiencias' }
 ];
 
-const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
+const ModalCalendar = ({ modalOpen, handleOpenModal, role }) => {
   const [modalOpenEvent, setModalOpenEvent] = useState(false);
   const [events, setEvents] = useState([]);
   const [now] = useState(new Date());
@@ -95,7 +95,7 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
     };
     getEventCollaborator();
   }, [selectCollaborator]);
-  console.log(eventCollaborator);
+
   useEffect(() => {
     if (selectedFilterOption.column === '') {
       const activos = events.filter(
@@ -192,6 +192,7 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
             setEvents={setEvents}
             events={events}
             process={process}
+            role={role}
           />
         ))
     ) : (
@@ -385,6 +386,7 @@ const ModalCalendar = ({ modalOpen, handleOpenModal }) => {
         setItems={setItems}
         setEvents={setEvents}
         events={events}
+        role={role}
       />
     </Modal>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Modal,
@@ -7,17 +7,60 @@ import {
   ModalFooter,
   Input,
   Label,
-  Spinner
+  Spinner,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
 } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { NotificationManager } from 'components/common/react-notifications';
 
 import axios from 'axios';
+import clienteAxios from 'config/axios';
 import api from '../../constants/api';
 
-const AddNewModal = ({ modalOpen, toggleModal, idLawyer, reloadFnData }) => {
+const AddNewModal = ({
+  modalOpen,
+  toggleModal,
+  idLawyer,
+  reloadFnData,
+  role,
+  nameLawyer
+}) => {
   const [fillingN, setFillingN] = useState();
   const [loading, setLoading] = useState(false);
+  const [collaborator, setCollaborator] = useState({
+    name: 'Seleccionar colaborador'
+  });
+  const [list, setList] = useState([]);
+  const [id, setId] = useState();
+  const [name, setName] = useState();
+
+  console.log(nameLawyer);
+  useEffect(() => {
+    const getCollaborator = async () => {
+      try {
+        const data = await clienteAxios.get('/collaborator/all/bylawyer');
+
+        setList(data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getCollaborator();
+  }, []);
+
+  useEffect(() => {
+    if (collaborator.name !== 'Seleccionar colaborador') {
+      // eslint-disable-next-line no-underscore-dangle
+      setId(collaborator._id);
+      setName(nameLawyer);
+    } else {
+      setId(idLawyer);
+    }
+  }, [collaborator]);
 
   const cerrar = () => {
     toggleModal(!modalOpen);
@@ -94,11 +137,12 @@ const AddNewModal = ({ modalOpen, toggleModal, idLawyer, reloadFnData }) => {
             .post(`${api}/process`, {
               filingNumber: fillingN.trim(),
               lastUpdateDate: fechaUltimaActuacion,
-              lawyer: idLawyer,
+              lawyer: id,
               idProceso,
               despacho,
               departamento,
-              sujetosProcesales
+              sujetosProcesales,
+              assigned: name
             })
             .then((result) => {
               console.log(result);
@@ -145,6 +189,63 @@ const AddNewModal = ({ modalOpen, toggleModal, idLawyer, reloadFnData }) => {
           <IntlMessages id='pages.product-name' />
         </Label>
         <Input value={fillingN} onChange={(e) => setFillingN(e.target.value)} />
+
+        {role === 'Admin' && (
+          <>
+            <Label className='mt-3'>
+              <p style={{ marginBottom: 0 }}>
+                Asignar a colaborador{'   '}
+                <span
+                  style={{ fontSize: 10.5, marginLeft: 5, color: '#d7d7d7' }}
+                >
+                  (opcional)
+                </span>
+              </p>
+            </Label>
+            <UncontrolledDropdown>
+              <DropdownToggle
+                caret
+                color='outline-dark'
+                size='xs p-2'
+                style={{
+                  borderRadius: 0,
+                  width: 325,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderColor: 'rgb(193 193 193)',
+                  textTransform: 'capitalize'
+                }}
+              >
+                {collaborator.name}
+              </DropdownToggle>
+              <DropdownMenu
+                style={{
+                  borderRadius: 0,
+                  width: 325
+                }}
+              >
+                {list.map((order, index) => {
+                  return (
+                    <DropdownItem
+                      style={{
+                        textTransform: 'capitalize'
+                      }}
+                      key={index.name}
+                      onClick={() => {
+                        setCollaborator(
+                          list.find((x) => x.name === order.name)
+                        );
+                      }}
+                    >
+                      {order.name}
+                    </DropdownItem>
+                  );
+                })}
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </>
+        )}
       </ModalBody>
       <ModalFooter>
         <Button color='secondary' outline onClick={cerrar}>

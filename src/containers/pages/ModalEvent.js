@@ -8,7 +8,11 @@ import {
   Spinner,
   Input,
   Label,
-  Row
+  Row,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
 } from 'reactstrap';
 import IntlMessages from 'helpers/IntlMessages';
 import { NotificationManager } from 'components/common/react-notifications';
@@ -17,6 +21,7 @@ import ReactAutoSugegstExample from 'containers/forms/ReactAutoSugegstExample';
 import axios from 'axios';
 import uri from 'constants/api';
 import ReactSelect from 'react-select';
+import clienteAxios from 'config/axios';
 
 const typeEvent = [
   { label: 'Procesales', value: 'Procesales' },
@@ -33,7 +38,8 @@ const ModalEvent = ({
   events,
   event,
   id,
-  endEvento
+  endEvento,
+  role
 }) => {
   const [creado] = useState(new Date());
   const [loading, setLoading] = useState(false);
@@ -42,6 +48,37 @@ const ModalEvent = ({
   const [title, setTitle] = useState('');
   const [process, setProcess] = useState('');
   const [type, setType] = useState('');
+  const [idLawyer, setIdLawyer] = useState();
+  const [collaborator, setCollaborator] = useState({
+    name: 'Seleccionar colaborador'
+  });
+  const [list, setList] = useState([]);
+  const [assigned, setAssigned] = useState('');
+
+  useEffect(() => {
+    const getCollaborator = async () => {
+      try {
+        const data = await clienteAxios.get('/collaborator/all/bylawyer');
+
+        setList(data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getCollaborator();
+  }, []);
+
+  useEffect(() => {
+    const lawyerId = localStorage.getItem('gogo_current_user');
+    if (collaborator.name !== 'Seleccionar colaborador') {
+      // eslint-disable-next-line no-underscore-dangle
+      setIdLawyer(collaborator._id);
+      setAssigned(lawyerId.split('title":"')[1].split('","id"')[0]);
+    } else {
+      setIdLawyer(lawyerId.split('"id":"')[1].split('","uid":')[0]);
+    }
+  }, [collaborator]);
 
   useEffect(() => {
     if (id) {
@@ -109,10 +146,14 @@ const ModalEvent = ({
         start,
         end: final,
         process,
-        lawyer,
-        type: type.value
+        lawyer: idLawyer,
+        type: type.value,
+        assigned
       });
-      setEvents([...events, eventData.data]);
+
+      if (eventData.data.assigned === '') {
+        setEvents([...events, eventData.data]);
+      }
 
       console.log(eventData.data);
       createNotification('success', 'filled', 'Evento registrado');
@@ -124,6 +165,9 @@ const ModalEvent = ({
         setProcess('');
         setType('');
         setEnd('');
+        setCollaborator({
+          name: 'Seleccionar colaborador'
+        });
 
         handleOpenModalEvent();
       }, 2000);
@@ -272,6 +316,63 @@ const ModalEvent = ({
 
         <Label className='mt-3'>Proceso enlazado: </Label>
         <ReactAutoSugegstExample process={process} setProcess={setProcess} />
+
+        {role !== 'Read' && (
+          <>
+            <Label className='mt-3'>
+              <p style={{ marginBottom: 0 }}>
+                Asignar a colaborador: {'   '}
+                <span
+                  style={{ fontSize: 10.5, marginLeft: 5, color: '#d7d7d7' }}
+                >
+                  (opcional)
+                </span>
+              </p>
+            </Label>
+            <UncontrolledDropdown>
+              <DropdownToggle
+                caret
+                color='outline-dark'
+                size='xs p-2'
+                style={{
+                  borderRadius: 0,
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderColor: 'rgb(193 193 193)',
+                  textTransform: 'capitalize'
+                }}
+              >
+                {collaborator.name}
+              </DropdownToggle>
+              <DropdownMenu
+                style={{
+                  borderRadius: 0,
+                  width: 325
+                }}
+              >
+                {list.map((order, index) => {
+                  return (
+                    <DropdownItem
+                      style={{
+                        textTransform: 'capitalize'
+                      }}
+                      key={index.name}
+                      onClick={() => {
+                        setCollaborator(
+                          list.find((x) => x.name === order.name)
+                        );
+                      }}
+                    >
+                      {order.name}
+                    </DropdownItem>
+                  );
+                })}
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </>
+        )}
       </ModalBody>
 
       <ModalFooter style={id && { justifyContent: 'space-between' }}>

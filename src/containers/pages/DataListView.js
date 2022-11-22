@@ -15,7 +15,8 @@ const DataListView = ({ proceso, isSelect, collect, onCheckItem }) => {
     sujetosProcesales,
     state,
     notificationWeb,
-    _id
+    _id,
+    assigned
   } = proceso;
 
   return (
@@ -73,6 +74,19 @@ const DataListView = ({ proceso, isSelect, collect, onCheckItem }) => {
               </div>
             </div>
           </div>
+          {assigned && (
+            <div
+              style={{
+                position: 'absolute',
+                left: '83.5%',
+                top: '80%'
+              }}
+            >
+              <p style={{ fontSize: 11, color: 'rgb(193 193 193)' }}>
+                Asignado por: {assigned}
+              </p>
+            </div>
+          )}
         </Card>
       </ContextMenuTrigger>
     </Colxx>
