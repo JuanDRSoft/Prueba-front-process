@@ -174,7 +174,7 @@ const TopNav = ({
       <div className='navbar-right'>
         {isDarkSwitchActive && <TopnavDarkSwitch />}
         <div className='header-icons d-inline-block align-middle'>
-          {evento && <TopNavCalendar />}
+          {evento && <TopNavCalendar authUser={authUser} />}
           <TopnavNotifications />
         </div>
         <div className='user d-inline-block'>
