@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
 import { Card, CardBody, CardTitle, Row } from 'reactstrap';
 
-const PreviewEventos = ({ event, events, setEvents, process }) => {
+const PreviewEventos = ({ event, events, setEvents, process, role }) => {
   const [modalOpenEvent, setModalOpenEvent] = useState(false);
 
-  const { title, creado, start, end, _id } = event;
+  const { title, creado, start, end, _id, assigned } = event;
 
   const params = useParams();
 
@@ -108,9 +108,16 @@ const PreviewEventos = ({ event, events, setEvents, process }) => {
                 style={{
                   fontSize: 10,
                   color: 'gray',
-                  textAlign: 'end'
+                  textAlign: 'end',
+                  display: 'flex',
+                  gap: 10
                 }}
               >
+                {assigned && (
+                  <p style={{ fontSize: 10, color: 'gray', marginBottom: 0 }}>
+                    Asignado por: {assigned}
+                  </p>
+                )}
                 Creado: {fecha}
               </p>
             </div>
@@ -126,6 +133,7 @@ const PreviewEventos = ({ event, events, setEvents, process }) => {
         event={event}
         id={_id}
         endEvento={endEvento}
+        role={role}
       />
     </Row>
   );
