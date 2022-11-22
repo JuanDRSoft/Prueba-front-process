@@ -61,10 +61,12 @@ const DataListPages = ({ match, authUser }) => {
   const [lastChecked, setLastChecked] = useState(null);
   const [lawyer, setLawyer] = useState({});
   const [process, setProcess] = useState(true);
+  const [role, setRole] = useState('');
   const [reloadData, setReloadData] = useState(false);
 
   const { currentUser } = authUser;
   const idLawyer = currentUser?.id || 0;
+  const nameLawyer = currentUser?.title;
 
   useEffect(() => {
     setCurrentPage(1);
@@ -75,6 +77,7 @@ const DataListPages = ({ match, authUser }) => {
       const data = await clienteAxios.get(`/lawyer/${currentUser.id}`);
       setLawyer(data.data);
       setProcess(true);
+      setRole('Admin');
 
       console.log(lawyer);
     };
@@ -91,6 +94,7 @@ const DataListPages = ({ match, authUser }) => {
           );
           setLawyer(data.data);
           setProcess(data.data.process);
+          setRole(data.data.role);
         } catch (error) {
           console.log(error);
         }
@@ -265,6 +269,8 @@ const DataListPages = ({ match, authUser }) => {
           categories={categories}
           idLawyer={idLawyer}
           reloadFnData={reloadFnData}
+          role={role}
+          nameLawyer={nameLawyer}
         />
         {items && (
           <ListPageListing
