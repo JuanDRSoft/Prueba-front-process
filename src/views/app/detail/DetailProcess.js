@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardBody, CardTitle, Spinner, Row, Button } from 'reactstrap';
+import { getTime } from 'date-fns';
 
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navs/Breadcrumb';
 import { connect } from 'react-redux';
 import AddNewTodoModal from 'containers/applications/AddNewTodoModal';
-import clienteAxios from '../../../config/axios';
 import Proceso from './components/Proceso/Proceso';
 import style from './detailcss.module.css';
 import PreviewAnexos from './components/anexos/PreviewAnexos';
 import PreviewEventos from './components/eventos/PreviewEventos';
+
+import clienteAxios from '../../../config/axios';
 
 const DetailProcess = ({ match, authUser }) => {
   const [data, setData] = useState({});
@@ -21,6 +23,7 @@ const DetailProcess = ({ match, authUser }) => {
   const [anexos, setAnexos] = useState([]);
   const [events, setEvents] = useState([]);
   const [processEvent, setProcessEvent] = useState([]);
+  const [days, setDays] = useState('');
 
   const params = useParams();
 
@@ -48,6 +51,13 @@ const DetailProcess = ({ match, authUser }) => {
             setCantidad(resultProcess.data.paginacion.cantidadRegistros);
             setProcesos(resultProcess.data.actuaciones);
             setLoading(false);
+            setDays(
+              (getTime(new Date()) -
+                getTime(
+                  new Date(resultProcess.data.actuaciones[0].fechaActuacion)
+                )) /
+                (1000 * 60 * 60 * 24)
+            );
           });
       });
     };
@@ -114,8 +124,19 @@ const DetailProcess = ({ match, authUser }) => {
             >
               <Card>
                 <CardBody>
-                  <CardTitle style={{ fontWeight: 'bold' }}>
+                  <CardTitle
+                    style={{
+                      fontWeight: 'bold',
+                      display: 'flex',
+                      justifyContent: 'space-between'
+                    }}
+                  >
                     DETALLES DEL PROCESO
+                    <div>
+                      <p style={{ fontSize: 12 }}>
+                        {Number(days).toFixed()} Días sin actuaciones
+                      </p>
+                    </div>
                   </CardTitle>
                   <div className={style.detailData}>
                     <h4 className={style.textMargin}>Numero de Radicado:</h4>
