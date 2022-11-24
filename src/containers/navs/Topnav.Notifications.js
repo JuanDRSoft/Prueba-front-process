@@ -118,6 +118,50 @@ const EventNotificationItem = ({ title, start, creado, handleOpenModal }) => {
   );
 };
 
+const DaysNotificationItem = ({ lastUpdateDate, filingNumber, _id }) => {
+  return (
+    <div
+      className='d-flex flex-row mb-3 pb-3 border-bottom'
+      style={{ alignItems: 'center' }}
+    >
+      <div className=''>
+        <NavLink href={`/app/detail/${_id}`}>
+          <p
+            style={{
+              display: 'flex',
+              fontSize: 10,
+              marginBottom: 0,
+              color: 'gray'
+            }}
+          >
+            Radicado: {filingNumber}
+          </p>
+
+          <p
+            style={{
+              display: 'flex',
+              fontSize: 12,
+              marginBottom: 5,
+              // color: 'gray',
+              lineHeight: 1.5
+            }}
+          >
+            Lleva mas de un año sin actuaciones
+          </p>
+
+          <Badge
+            color='danger'
+            pill
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            Ultima actuación: {lastUpdateDate.split('T')[0]}
+          </Badge>
+        </NavLink>
+      </div>
+    </div>
+  );
+};
+
 const TopnavNotifications = () => {
   const [process, setProcess] = useState([]);
   const [events, setEvents] = useState([]);
@@ -148,6 +192,9 @@ const TopnavNotifications = () => {
     ? events.filter((e) => e.notification === true)
     : [];
 
+  const notificationDays = process
+    ? process.filter((e) => e.notificationDaysWeb === true)
+    : [];
   const handleOpenModal = () => {
     setModalOpen(!modalOpen);
   };
@@ -161,7 +208,9 @@ const TopnavNotifications = () => {
         >
           <i className='simple-icon-bell' />
           <span className='count'>
-            {notifications.length + eventNotifications.length}
+            {notifications.length +
+              eventNotifications.length +
+              notificationDays.length}
           </span>
         </DropdownToggle>
         <DropdownMenu
@@ -182,6 +231,16 @@ const TopnavNotifications = () => {
                   key={index}
                   {...notification}
                   handleOpenModal={handleOpenModal}
+                />
+              );
+            })}
+
+            {notificationDays.map((notification, index) => {
+              return (
+                <DaysNotificationItem
+                  key={index}
+                  {...notification}
+                  // handleOpenModal={handleOpenModal}
                 />
               );
             })}
