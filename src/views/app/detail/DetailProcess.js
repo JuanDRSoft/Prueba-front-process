@@ -80,7 +80,8 @@ const DetailProcess = ({ match, authUser }) => {
   useEffect(() => {
     const updateStateNotification = async () => {
       await clienteAxios.put(`/process/${_id}`, {
-        notificationWeb: false
+        notificationWeb: false,
+        notificationDaysWeb: false
       });
     };
 
