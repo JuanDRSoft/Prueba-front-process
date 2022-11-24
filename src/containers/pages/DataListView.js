@@ -16,7 +16,8 @@ const DataListView = ({ proceso, isSelect, collect, onCheckItem }) => {
     state,
     notificationWeb,
     _id,
-    assigned
+    assigned,
+    notificationDaysWeb
   } = proceso;
 
   return (
@@ -59,7 +60,7 @@ const DataListView = ({ proceso, isSelect, collect, onCheckItem }) => {
                 Sujetos Procesales: {sujetosProcesales}
               </p>
               <div style={{ width: '20px' }}>
-                {notificationWeb && (
+                {notificationWeb || notificationDaysWeb ? (
                   <div
                     style={{
                       display: 'flex',
@@ -70,7 +71,7 @@ const DataListView = ({ proceso, isSelect, collect, onCheckItem }) => {
                   >
                     <img width='30' src={alert} alt='' />
                   </div>
-                )}
+                ) : null}
               </div>
             </div>
           </div>
