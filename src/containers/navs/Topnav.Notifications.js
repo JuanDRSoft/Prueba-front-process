@@ -110,7 +110,7 @@ const EventNotificationItem = ({ title, start, creado, handleOpenModal }) => {
             style={{ marginTop: -20, fontSize: 11, marginBottom: -5 }}
             onClick={handleOpenModal}
           >
-            Ver mas
+            Ver más
           </button>
         </div>
       </div>
@@ -119,45 +119,56 @@ const EventNotificationItem = ({ title, start, creado, handleOpenModal }) => {
 };
 
 const DaysNotificationItem = ({ lastUpdateDate, filingNumber, _id }) => {
+  const resta = (Date.now() - new Date(lastUpdateDate)) / (1000 * 60 * 60 * 24);
+
   return (
-    <div
-      className='d-flex flex-row mb-3 pb-3 border-bottom'
-      style={{ alignItems: 'center' }}
-    >
-      <div className=''>
-        <NavLink href={`/app/detail/${_id}`}>
-          <p
-            style={{
-              display: 'flex',
-              fontSize: 10,
-              marginBottom: 0,
-              color: 'gray'
-            }}
-          >
-            Radicado: {filingNumber}
-          </p>
+    <div>
+      {resta > 182 && (
+        <div
+          className='d-flex flex-row mb-3 pb-3 border-bottom'
+          style={{ alignItems: 'center' }}
+        >
+          <div className=''>
+            <NavLink href={`/app/detail/${_id}`}>
+              <p
+                style={{
+                  display: 'flex',
+                  fontSize: 10,
+                  marginBottom: 0,
+                  color: 'gray'
+                }}
+              >
+                Radicado: {filingNumber}
+              </p>
 
-          <p
-            style={{
-              display: 'flex',
-              fontSize: 12,
-              marginBottom: 5,
-              // color: 'gray',
-              lineHeight: 1.5
-            }}
-          >
-            Lleva mas de un año sin actuaciones
-          </p>
+              <>
+                <p
+                  style={{
+                    display: 'flex',
+                    fontSize: 12,
+                    marginBottom: 5,
+                    // color: 'gray',
+                    lineHeight: 1.5
+                  }}
+                >
+                  {resta > 182 &&
+                    resta < 365 &&
+                    'Lleva más de 6 meses sin actuaciones'}
+                  {resta > 365 && 'Lleva más de un año sin actuaciones'}
+                </p>
 
-          <Badge
-            color='danger'
-            pill
-            style={{ display: 'flex', justifyContent: 'center' }}
-          >
-            Ultima actuación: {lastUpdateDate.split('T')[0]}
-          </Badge>
-        </NavLink>
-      </div>
+                <Badge
+                  color='danger'
+                  pill
+                  style={{ display: 'flex', justifyContent: 'center' }}
+                >
+                  Ultima actuación: {lastUpdateDate.split('T')[0]}
+                </Badge>
+              </>
+            </NavLink>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
