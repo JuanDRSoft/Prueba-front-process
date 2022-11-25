@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from 'components/common/CustomBootstrap';
 import alert from '../../assets/notification/alert.png';
+import advertence from '../../assets/notification/advertencia.png';
 
 const DataListView = ({ proceso, isSelect, collect, onCheckItem }) => {
   const {
@@ -19,6 +20,8 @@ const DataListView = ({ proceso, isSelect, collect, onCheckItem }) => {
     assigned,
     notificationDaysWeb
   } = proceso;
+
+  const resta = (Date.now() - new Date(lastUpdateDate)) / (1000 * 60 * 60 * 24);
 
   return (
     <Colxx xxs='12' className='mb-3'>
@@ -72,6 +75,19 @@ const DataListView = ({ proceso, isSelect, collect, onCheckItem }) => {
                     <img width='30' src={alert} alt='' />
                   </div>
                 ) : null}
+
+                {resta > 60 && resta < 182 && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      margin: '0 1em'
+                    }}
+                  >
+                    <img width='30' src={advertence} alt='' />
+                  </div>
+                )}
               </div>
             </div>
           </div>
