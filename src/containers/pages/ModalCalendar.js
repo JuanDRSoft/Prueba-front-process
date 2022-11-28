@@ -244,7 +244,7 @@ const ModalCalendar = ({ modalOpen, handleOpenModal, role }) => {
         <span style={{ fontSize: 12 }}>{label(now)}</span>
       </ModalHeader>
       <ModalBody>
-        <CalendarCard events={events} />
+        <CalendarCard events={events} process={process} setEvents={setEvents} />
 
         <Row className='mt-5'>
           <Colxx xxs='4'>
