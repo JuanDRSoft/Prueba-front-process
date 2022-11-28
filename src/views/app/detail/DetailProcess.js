@@ -96,7 +96,9 @@ const DetailProcess = ({ match, authUser }) => {
     setModalOpen(!modalOpen);
   };
 
-  const eventos = events.filter((e) => e.process === filingNumber);
+  const eventos = events.filter(
+    (e) => e.process === filingNumber && new Date(e.start) > Date.now()
+  );
 
   const renderProcesos = () => {
     return procesos.map((proceso) => (
@@ -135,7 +137,8 @@ const DetailProcess = ({ match, authUser }) => {
                     DETALLES DEL PROCESO
                     <div>
                       <p style={{ fontSize: 12 }}>
-                        {Number(days).toFixed()} Días sin actuaciones
+                        {Number(days).toFixed()} Días sin actuaciones{' '}
+                        {eventos.length > 0 && `- ${eventos.length} Eventos`}
                       </p>
                     </div>
                   </CardTitle>
