@@ -183,7 +183,7 @@ const BlankPage = ({ match, authUser }) => {
         failure: '/failure',
         pending: '/pending'
       },
-      notification_url: 'https://paymenth-method.herokuapp.com/ipn'
+      notification_url: 'http://190.158.226.150:7001/ipn'
     };
 
     const paymentData = await clienteAxios.post(url, body, {
