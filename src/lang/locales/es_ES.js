@@ -46,6 +46,7 @@ module.exports = {
   'menu.search': 'Búsqueda',
   'menu.docs': 'Reportes',
   'menu.blank-page': 'Cuenta',
+  'menu.reportes': 'Reportes',
   /* 04.Error  */
   'layouts.error-title': 'Vaya, parece que ha ocurrido un error!',
   'layouts.error-code': 'Código de error',
@@ -68,5 +69,5 @@ module.exports = {
   'pages.orderby': 'Ordernar por: ',
   'page.detalle': 'Detalle del Proceso',
   'menu.detail': 'Proceso',
-  'page.report': 'Reportes de procesos'
+  'page.report': 'Reportes'
 };
