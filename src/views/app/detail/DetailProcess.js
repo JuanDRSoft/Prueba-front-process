@@ -6,6 +6,8 @@ import { getTime } from 'date-fns';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navs/Breadcrumb';
 import { connect } from 'react-redux';
+import ModalReport from 'containers/pages/ModalReport';
+import IntlMessages from 'helpers/IntlMessages';
 import AddNewTodoModal from 'containers/applications/AddNewTodoModal';
 import Proceso from './components/Proceso/Proceso';
 import style from './detailcss.module.css';
@@ -20,6 +22,7 @@ const DetailProcess = ({ match, authUser }) => {
   const [cantidad, setCantidad] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpenReport, setModalOpenReport] = useState(false);
   const [anexos, setAnexos] = useState([]);
   const [events, setEvents] = useState([]);
   const [processEvent, setProcessEvent] = useState([]);
@@ -106,11 +109,32 @@ const DetailProcess = ({ match, authUser }) => {
     ));
   };
 
+  const handleOpenModalReport = () => {
+    setModalOpenReport(!modalOpenReport);
+  };
+
   return (
     <>
       <Row>
         <Colxx xxs='12'>
-          <Breadcrumb heading='page.detalle' match={match} />
+          <Row>
+            <Colxx xxs='10'>
+              <Breadcrumb heading='page.detalle' match={match} />
+            </Colxx>
+            <Colxx xxs='2'>
+              <Button
+                color='primary'
+                size='sm'
+                className='top-right-button ml-4'
+                onClick={() => handleOpenModalReport()}
+                disabled={loading}
+              >
+                <i className='simple-icon-docs mr-2' />
+                <IntlMessages id='Generar Reporte' />
+              </Button>
+            </Colxx>
+          </Row>
+
           <Separator className='mb-5' />
         </Colxx>
       </Row>
@@ -232,6 +256,16 @@ const DetailProcess = ({ match, authUser }) => {
           toggleModal={openModal}
           filingNumber={filingNumber}
           anexos={anexos}
+        />
+
+        <ModalReport
+          modalOpenReport={modalOpenReport}
+          handleOpenModalReport={handleOpenModalReport}
+          procesos={procesos}
+          days={days}
+          data={data}
+          anexos={anexos}
+          events={eventos}
         />
       </div>
     </>
