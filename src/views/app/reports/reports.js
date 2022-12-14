@@ -8,12 +8,14 @@ import {
   DropdownMenu,
   DropdownItem,
   Input,
-  Label
+  Label,
+  CardSubtitle
 } from 'reactstrap';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navs/Breadcrumb';
 import IntlMessages from 'helpers/IntlMessages';
 
+import { BarChart, PieChart } from 'components/charts';
 import UseSheet from '../../../hooks/useSheet';
 import UseSheetEvent from '../../../hooks/useSheetEvent';
 import clienteAxios from '../../../config/axios';
@@ -30,6 +32,7 @@ const Reports = ({ match }) => {
     label: 'Todos',
     column: 'todos'
   });
+
   const [selectDateOne, setSelectDateOne] = useState('');
   const [selectDateTwo, setSelectDateTwo] = useState('');
 
@@ -37,6 +40,8 @@ const Reports = ({ match }) => {
   const [selectCollaborator, setSelectCollaborator] = useState('');
   const [filterProcess, setFilterProcess] = useState([]);
   const [events, setEvents] = useState([]);
+  const [despachos, setDespachos] = useState([]);
+  const [ciudades, setCiudades] = useState([]);
 
   useEffect(() => {
     const getAllData = async () => {
@@ -47,6 +52,7 @@ const Reports = ({ match }) => {
         setFilterProcess(countDataAll.data);
       }
     };
+
     const getCollaborator = async () => {
       const data = await clienteAxios.get('/collaborator/all/bylawyer');
       setCollaborators(data.data);
@@ -87,6 +93,100 @@ const Reports = ({ match }) => {
       getProcessCollaborator();
     }
   }, [selectCollaborator]);
+
+  const randomColor = () => {
+    const simbolos = '0123456789ABCDEF';
+
+    let color = '#';
+
+    for (let e = 0; e < 6; e += 1) {
+      color += simbolos[Math.floor(Math.random() * 16)];
+      console.log(color);
+    }
+    return color;
+  };
+
+  useEffect(() => {
+    const filtrosUnicos = [];
+
+    /* eslint no-plusplus: "error" */
+    for (let i = 0; i < process.length; i += 1) {
+      const elemento = process[i].despacho;
+
+      if (!filtrosUnicos.includes(process[i].despacho)) {
+        filtrosUnicos.push(elemento);
+      }
+    }
+
+    const despacho = [];
+    const length = [];
+    /* eslint no-plusplus: "error" */
+    for (let i = 0; i < filtrosUnicos.length; i += 1) {
+      const filtro = process.filter((e) => e.despacho === filtrosUnicos[i]);
+
+      length.push(filtro.length);
+
+      despacho.push({
+        data: [filtro.length],
+        label: filtrosUnicos[i],
+        borderWidth: 1,
+        borderColor: 'black',
+        backgroundColor: randomColor()
+      });
+    }
+
+    setDespachos(despacho);
+  }, [process]);
+
+  useEffect(() => {
+    const filtrosUnicos = [];
+
+    /* eslint no-plusplus: "error" */
+    for (let i = 0; i < process.length; i += 1) {
+      const elemento = process[i].departamento;
+
+      if (!filtrosUnicos.includes(process[i].departamento)) {
+        filtrosUnicos.push(elemento);
+      }
+    }
+
+    const border = [];
+    const length = [];
+    const background = [];
+    /* eslint no-plusplus: "error" */
+    for (let i = 0; i < filtrosUnicos.length; i += 1) {
+      const filtro = process.filter((e) => e.departamento === filtrosUnicos[i]);
+
+      length.push(filtro.length);
+      border.push('black');
+      background.push(randomColor());
+    }
+
+    setCiudades({
+      data: length,
+      backgroundColor: background,
+      borderColor: border,
+      labelCity: filtrosUnicos
+    });
+  }, [process]);
+
+  const barChartData = {
+    labels: ['DESPACHOS'],
+    datasets: despachos
+  };
+
+  const barChartCity = {
+    labels: ciudades.labelCity,
+    datasets: [
+      {
+        label: '',
+        borderColor: ciudades.borderColor,
+        backgroundColor: ciudades.backgroundColor,
+        borderWidth: 2,
+        data: ciudades.data
+      }
+    ]
+  };
 
   return (
     <>
@@ -242,6 +342,30 @@ const Reports = ({ match }) => {
                 <UseSheetEvent renderData={events} />
               </p>
             </CardBody>
+          </Card>
+        </Colxx>
+      </Row>
+
+      <Row>
+        <Colxx xxs='8'>
+          <Card className='p-5' style={{ height: 490 }}>
+            <CardSubtitle style={{ fontSize: 26, marginBottom: 50 }}>
+              <IntlMessages id='Resumen Gráfico De Procesos Por Despacho' />
+            </CardSubtitle>
+            <div className='chart-container'>
+              <BarChart shadow data={barChartData} />
+            </div>
+          </Card>
+        </Colxx>
+
+        <Colxx xxs='4'>
+          <Card className='p-5'>
+            <CardSubtitle style={{ fontSize: 26 }}>
+              <IntlMessages id='Resumen Gráfico De Procesos Por Ciudad' />
+            </CardSubtitle>
+            <div className='chart-container'>
+              <PieChart shadow data={barChartCity} />
+            </div>
           </Card>
         </Colxx>
       </Row>
