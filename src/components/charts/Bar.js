@@ -18,7 +18,7 @@ const Bar = ({ data, shadow = false }) => {
           draw(ease) {
             Chart.controllers.bar.prototype.draw.call(this, ease);
             const {
-              chart: { ctx },
+              chart: { ctx }
             } = this;
             ctx.save();
             ctx.shadowColor = 'rgba(0,0,0,0.2)';
@@ -28,14 +28,14 @@ const Bar = ({ data, shadow = false }) => {
             ctx.responsive = true;
             Chart.controllers.bar.prototype.draw.apply(this, arguments);
             ctx.restore();
-          },
+          }
         });
       }
       const context = chartContainer.current.getContext('2d');
       const newChartInstance = new Chart(context, {
         type: shadow ? 'barWithShadow' : 'bar',
         options: barChartOptions,
-        data,
+        data
       });
       setChartInstance(newChartInstance);
     }
